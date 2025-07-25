@@ -272,19 +272,30 @@ class PrimelSolverGitHub {
     }
 
     calculateOptimalGuess() {
-        // Simplified entropy calculation for demo
+        if (this.autoGame.availablePrimes.length <= 1) {
+            return this.autoGame.availablePrimes[0] || this.primeList[0];
+        }
+        
+        // For first guess, use known good starting guesses
         if (this.autoGame.currentGuess === 0) {
-            // Good starting guesses
             const startingGuesses = [12953, 15923, 17389];
             return startingGuesses[Math.floor(Math.random() * startingGuesses.length)];
         }
         
-        // For subsequent guesses, pick from available primes
-        if (this.autoGame.availablePrimes.length > 0) {
-            return this.autoGame.availablePrimes[Math.floor(Math.random() * Math.min(10, this.autoGame.availablePrimes.length))];
+        // Calculate entropy for top candidates
+        const candidates = this.autoGame.availablePrimes.slice(0, Math.min(15, this.autoGame.availablePrimes.length));
+        let bestGuess = candidates[0];
+        let bestEntropy = -1;
+        
+        for (const candidate of candidates) {
+            const entropy = this.calculateEntropyForGuess(candidate, this.autoGame.availablePrimes);
+            if (entropy > bestEntropy) {
+                bestEntropy = entropy;
+                bestGuess = candidate;
+            }
         }
         
-        return this.primeList[Math.floor(Math.random() * this.primeList.length)];
+        return bestGuess;
     }
 
     calculateFeedback(guess, target) {
@@ -522,22 +533,79 @@ class PrimelSolverGitHub {
 
     // Shared Methods
     generateMockSuggestions(remainingCount = null) {
-        const basePrimes = [12953, 15923, 17389, 19427, 23719];
         const suggestions = [];
-        const count = remainingCount || this.remainingPrimes;
-
-        for (let i = 0; i < Math.min(5, Math.max(1, count)); i++) {
-            const prime = basePrimes[i] || this.primeList[Math.floor(Math.random() * this.primeList.length)];
-            const entropy = (6.8 - i * 0.3 - (this.gameHistory.length || this.autoGame.currentGuess) * 0.2).toFixed(6);
-            
+        let availablePrimes;
+        
+        // Use actual available primes based on current mode
+        if (this.currentMode === 'auto' && this.autoGame.availablePrimes) {
+            availablePrimes = this.autoGame.availablePrimes;
+        } else {
+            // For manual mode, simulate filtering based on game history
+            availablePrimes = this.filterPrimesFromHistory();
+        }
+        
+        // Calculate entropy for top candidates
+        const candidates = availablePrimes.slice(0, Math.min(20, availablePrimes.length));
+        const entropyResults = [];
+        
+        for (const prime of candidates) {
+            const entropy = this.calculateEntropyForGuess(prime, availablePrimes);
+            entropyResults.push({ prime, entropy });
+        }
+        
+        // Sort by entropy (highest first) and take top 5
+        entropyResults.sort((a, b) => b.entropy - a.entropy);
+        
+        for (let i = 0; i < Math.min(5, entropyResults.length); i++) {
             suggestions.push({
-                prime: prime,
-                entropy: parseFloat(entropy),
+                prime: entropyResults[i].prime,
+                entropy: parseFloat(entropyResults[i].entropy.toFixed(6)),
                 rank: i + 1
             });
         }
-
+        
         return suggestions;
+    }
+    
+    filterPrimesFromHistory() {
+        let filtered = [...this.primeList];
+        
+        // Apply each guess from history to filter the list
+        for (const entry of this.gameHistory) {
+            filtered = this.filterPrimes(filtered, entry.guess, entry.feedback);
+        }
+        
+        return filtered;
+    }
+    
+    calculateEntropyForGuess(guess, availablePrimes) {
+        if (availablePrimes.length <= 1) return 0;
+        
+        // Group primes by their feedback patterns
+        const patternGroups = {};
+        
+        for (const prime of availablePrimes) {
+            const feedback = this.calculateFeedback(guess, prime);
+            const patternKey = feedback.join('');
+            
+            if (!patternGroups[patternKey]) {
+                patternGroups[patternKey] = 0;
+            }
+            patternGroups[patternKey]++;
+        }
+        
+        // Calculate entropy
+        let entropy = 0;
+        const total = availablePrimes.length;
+        
+        for (const count of Object.values(patternGroups)) {
+            if (count > 0) {
+                const probability = count / total;
+                entropy += probability * Math.log2(total / count);
+            }
+        }
+        
+        return entropy;
     }
 
     displaySuggestions(suggestions, containerId) {
