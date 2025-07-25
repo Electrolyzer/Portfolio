@@ -221,15 +221,16 @@ class PrimelSolverGitHub {
         // Update stats
         this.updateAutoGameStats(this.autoGame.availablePrimes.length, this.autoGame.currentGuess, this.autoGame.target);
         
-        // Generate and display suggestions for next guess
-        this.displayAutoSuggestions();
-        this.showAutoLoadingSpinner(false);
-        
         // Check if won
         if (feedback.every(f => f === 2)) {
             this.endAutoGame(true);
+            this.showAutoLoadingSpinner(false);
             return;
         }
+        
+        // Generate and display suggestions for next guess (only if game continues)
+        this.displayAutoSuggestions();
+        this.showAutoLoadingSpinner(false);
         
         // Continue to next guess
         this.updateGameStatus(`Guess ${this.autoGame.currentGuess}: ${optimalGuess} - Preparing next guess...`);
@@ -427,7 +428,9 @@ class PrimelSolverGitHub {
             feedback: feedback.split('').map(Number)
         });
 
-        this.remainingPrimes = Math.max(1, Math.floor(this.remainingPrimes * this.getReductionFactor(feedback)));
+        // Calculate actual remaining primes based on filtering
+        const filteredPrimes = this.filterPrimesFromHistory();
+        this.remainingPrimes = filteredPrimes.length;
 
         this.updateManualGuessHistory();
         this.updateManualGameStats(this.remainingPrimes, this.gameHistory.length);
