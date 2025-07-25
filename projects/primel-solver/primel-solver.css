@@ -514,16 +514,6 @@
 }
 
 .demo-mode.active {
-    display: block;
-}
-
-#autoDemoMode {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 3rem;
-}
-
-#manualMode {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 3rem;
@@ -710,7 +700,7 @@
 }
 
 @media (max-width: 768px) {
-    #autoDemoMode, #manualMode {
+    .demo-mode.active {
         grid-template-columns: 1fr;
         gap: 2rem;
     }
