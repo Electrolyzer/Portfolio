@@ -9,30 +9,32 @@ This portfolio features a **Primel Entropy-Based Solver** - an intelligent tool 
 ### Key Features
 
 - **Interactive Web Demo**: Live demonstration of the entropy-based solver
-- **Flask API Backend**: RESTful API serving the Python solver logic
 - **Professional Portfolio Site**: Clean, responsive design showcasing technical skills
 - **Mathematical Foundation**: Implementation based on information theory principles
 - **Real-time Calculations**: Dynamic entropy calculations for optimal guess selection
+- **GitHub Pages Hosting**: Static hosting with no backend required
 
 ## Project Structure
 
 ```
 Portfolio/
-├── index.html              # Main portfolio page
-├── primel-solver.html      # Dedicated project demo page
-├── styles.css              # Main stylesheet
-├── primel-solver.css       # Project-specific styles
-├── script.js               # Main portfolio JavaScript
-├── primel-solver.js        # Demo page JavaScript
-├── app.py                  # Flask API server
-├── requirements.txt        # Python dependencies
-├── README.md              # This file
-├── primel_entropy_calc.py  # Core entropy calculation algorithm
-├── prime_list_reducer.py   # Prime list filtering logic
-├── interactive_primel_solver.py  # Command-line solver
-├── primel_game_gui.py      # Tkinter game (optional)
-├── primelist.csv          # Database of 5-digit primes
-└── generate_primelist.py   # Prime generation utility
+├── index.html                          # Main portfolio page
+├── styles.css                          # Main stylesheet
+├── script.js                           # Main portfolio JavaScript
+├── README.md                           # This file
+├── .gitignore                          # Git ignore file
+└── projects/                           # Projects directory
+    └── primel-solver/                  # Primel solver project
+        ├── primel-solver.html          # Interactive demo page
+        ├── primel-solver.css           # Project-specific styles
+        ├── primel-solver-github.js     # Demo JavaScript
+        ├── primel_entropy_calc.py      # Core entropy algorithm
+        ├── prime_list_reducer.py       # Prime list filtering
+        ├── interactive_primel_solver.py # Command-line solver
+        ├── primel_game_gui.py          # Tkinter game
+        ├── primelist.csv               # Database of 5-digit primes
+        ├── generate_primelist.py       # Prime generation utility
+        └── README.md                   # Project-specific README
 ```
 
 ## Setup Instructions
@@ -43,23 +45,13 @@ Portfolio/
 - pip (Python package installer)
 - Modern web browser
 
-### 1. Install Python Dependencies
+### 1. View the Portfolio
 
-```bash
-pip install -r requirements.txt
-```
+**Live URL**: `https://electrolyzer.github.io/Portfolio/`
 
-### 2. Start the Flask API Server
+### 2. Local Development
 
-```bash
-python app.py
-```
-
-The API server will start on `http://localhost:5000`
-
-### 3. Open the Portfolio Website
-
-Open `index.html` in your web browser, or serve it using a local web server:
+To run locally, serve the files using a local web server:
 
 ```bash
 # Using Python's built-in server
@@ -68,22 +60,13 @@ python -m http.server 8000
 # Then visit http://localhost:8000
 ```
 
-### 4. Test the Demo
+### 3. Test the Demo
 
 1. Navigate to the Primel Solver demo page
 2. Add guesses with their feedback patterns
 3. Click "Get Optimal Guesses" to see entropy-based recommendations
 
-## API Endpoints
-
-The Flask API provides the following endpoints:
-
-- `POST /api/initialize` - Initialize a new game session
-- `POST /api/add_guess` - Add a guess and feedback to game history
-- `POST /api/get_suggestions` - Get optimal next guesses
-- `POST /api/clear_history` - Clear game history
-- `GET /api/game_state` - Get current game state
-- `GET /api/health` - Health check
+Note: The web demo uses simplified calculations for GitHub Pages compatibility.
 
 ## Technical Implementation
 
@@ -157,27 +140,22 @@ Add new project cards to the projects section in `index.html`:
 
 Update the about text and skills in `index.html` to reflect your background and expertise.
 
-## Deployment Options
+## Deployment
 
-### GitHub Pages (Frontend Only)
+This portfolio is deployed on **GitHub Pages** at: `https://electrolyzer.github.io/Portfolio/`
 
-1. Push your code to a GitHub repository
-2. Enable GitHub Pages in repository settings
-3. Your portfolio will be available at `https://yourusername.github.io/repository-name`
+### Adding New Projects
 
-Note: The interactive demo requires the Flask API to be running separately.
+The portfolio is structured to easily accommodate new projects:
 
-### Full Stack Deployment
-
-For a complete deployment including the API:
-
-1. **Frontend**: Deploy to Netlify, Vercel, or GitHub Pages
-2. **Backend**: Deploy Flask API to Heroku, Railway, or DigitalOcean
-3. Update the `apiBaseUrl` in `primel-solver.js` to point to your deployed API
+1. Create a new folder in `projects/`
+2. Add your project files (HTML, CSS, JS, etc.)
+3. Update the main `index.html` to include your new project
+4. Commit and push to GitHub
 
 ## Performance Considerations
 
-- The entropy calculation is limited to the first 100 remaining primes for performance
+- The web demo uses simplified entropy calculations for browser compatibility
 - Calculations typically complete within 1-2 seconds for most game states
 - The prime list contains 8,363 five-digit primes
 
@@ -193,23 +171,11 @@ This project implements concepts from:
 
 The mathematical approach is based on [3Blue1Brown's video](https://www.youtube.com/watch?v=v68zYyaEmEA) explaining the information theory behind optimal Wordle strategies.
 
-## Troubleshooting
-
-### API Connection Issues
-
-- Ensure the Flask server is running on `http://localhost:5000`
-- Check that CORS is enabled (included in `app.py`)
-- Verify all Python dependencies are installed
-
-### Performance Issues
-
-- Large numbers of remaining primes may slow calculations
-- Consider reducing the candidate evaluation limit in `app.py`
-
-### Browser Compatibility
+## Browser Compatibility
 
 - Requires modern browser with ES6+ support
 - Tested on Chrome, Firefox, Safari, and Edge
+- Mobile-responsive design
 
 ## Contributing
 
