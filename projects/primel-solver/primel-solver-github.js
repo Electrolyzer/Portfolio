@@ -104,8 +104,13 @@ class PrimelSolverGitHub {
     initializeGame() {
         this.createGameBoard();
         this.switchMode('auto');
-        this.updateGameStats(8363, 0);
-        this.showMessage('Demo initialized - Click "New Game" to start the auto demo', 'info');
+        this.updateAutoGameStats(8363, 0, null);
+        this.showMessage('Demo initialized - Starting auto demo...', 'info');
+        
+        // Auto-start the first demo
+        setTimeout(() => {
+            this.startNewAutoGame();
+        }, 2000);
     }
 
     switchMode(mode) {
@@ -240,9 +245,16 @@ class PrimelSolverGitHub {
             return;
         }
         
-        this.autoGame.isPaused = true;
-        document.getElementById('playPauseBtn').textContent = '▶️ Play';
-        this.playAutoGameStep();
+        // If game is running, pause it first
+        if (this.autoGame.isPlaying && !this.autoGame.isPaused) {
+            this.autoGame.isPaused = true;
+            document.getElementById('playPauseBtn').textContent = '▶️ Play';
+        }
+        
+        // Execute one step
+        if (this.autoGame.isPlaying) {
+            this.playAutoGameStep();
+        }
     }
 
     togglePlayPause() {
