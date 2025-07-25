@@ -14,24 +14,48 @@ class PrimelSolverGitHub {
             speed: 'normal',
             gameBoard: []
         };
-        this.primeList = this.generatePrimeList();
+        this.primeList = [];
         this.initializeEventListeners();
-        this.initializeGame();
+        this.loadPrimeList();
     }
 
-    generatePrimeList() {
-        // Generate a subset of 5-digit primes for demo purposes
-        const primes = [
-            10007, 10009, 10037, 10039, 10061, 10067, 10069, 10079, 10091, 10093,
-            10099, 10103, 10111, 10133, 10139, 10141, 10151, 10159, 10163, 10169,
-            10177, 10181, 10193, 10211, 10223, 10243, 10247, 10253, 10259, 10267,
-            10271, 10273, 10289, 10301, 10303, 10313, 10321, 10331, 10333, 10337,
-            10343, 10357, 10369, 10391, 10399, 10427, 10429, 10433, 10453, 10457,
-            12953, 15923, 17389, 19427, 23719, 29173, 31397, 37199, 41299, 43291,
-            47293, 53197, 59393, 61291, 67297, 71293, 73297, 79193, 83297, 89197,
-            91199, 97291, 98317, 99991
-        ];
-        return primes;
+    async loadPrimeList() {
+        try {
+            const response = await fetch('primelist.csv');
+            const csvText = await response.text();
+            
+            // Parse CSV - assuming it's a simple list of primes, one per line
+            this.primeList = csvText
+                .split('\n')
+                .map(line => line.trim())
+                .filter(line => line && !isNaN(line))
+                .map(line => parseInt(line))
+                .filter(prime => prime >= 10000 && prime <= 99999);
+            
+            this.remainingPrimes = this.primeList.length;
+            this.showMessage(`Loaded ${this.primeList.length} primes from database`, 'success');
+            
+            // Initialize the game after loading primes
+            this.initializeGame();
+            
+        } catch (error) {
+            console.error('Error loading prime list:', error);
+            this.showMessage('Error loading prime database, using fallback list', 'error');
+            
+            // Fallback to smaller list if CSV fails to load
+            this.primeList = [
+                10007, 10009, 10037, 10039, 10061, 10067, 10069, 10079, 10091, 10093,
+                10099, 10103, 10111, 10133, 10139, 10141, 10151, 10159, 10163, 10169,
+                10177, 10181, 10193, 10211, 10223, 10243, 10247, 10253, 10259, 10267,
+                10271, 10273, 10289, 10301, 10303, 10313, 10321, 10331, 10333, 10337,
+                10343, 10357, 10369, 10391, 10399, 10427, 10429, 10433, 10453, 10457,
+                12953, 15923, 17389, 19427, 23719, 29173, 31397, 37199, 41299, 43291,
+                47293, 53197, 59393, 61291, 67297, 71293, 73297, 79193, 83297, 89197,
+                91199, 97291, 98317, 99991
+            ];
+            this.remainingPrimes = this.primeList.length;
+            this.initializeGame();
+        }
     }
 
     initializeEventListeners() {
