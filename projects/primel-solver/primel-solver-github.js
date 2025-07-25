@@ -1,31 +1,84 @@
-// Primel Solver Frontend JavaScript - GitHub Pages Version
-// This version works without the Flask API by using mock data and client-side calculations
+// Enhanced Primel Solver Frontend JavaScript - GitHub Pages Version
+// Supports both Auto Demo and Manual modes
 
 class PrimelSolverGitHub {
     constructor() {
         this.gameHistory = [];
-        this.remainingPrimes = 8363; // Starting number of primes
+        this.remainingPrimes = 8363;
+        this.currentMode = 'auto'; // 'auto' or 'manual'
+        this.autoGame = {
+            target: null,
+            currentGuess: 0,
+            isPlaying: false,
+            isPaused: false,
+            speed: 'normal',
+            gameBoard: []
+        };
+        this.primeList = this.generatePrimeList();
         this.initializeEventListeners();
         this.initializeGame();
     }
 
+    generatePrimeList() {
+        // Generate a subset of 5-digit primes for demo purposes
+        const primes = [
+            10007, 10009, 10037, 10039, 10061, 10067, 10069, 10079, 10091, 10093,
+            10099, 10103, 10111, 10133, 10139, 10141, 10151, 10159, 10163, 10169,
+            10177, 10181, 10193, 10211, 10223, 10243, 10247, 10253, 10259, 10267,
+            10271, 10273, 10289, 10301, 10303, 10313, 10321, 10331, 10333, 10337,
+            10343, 10357, 10369, 10391, 10399, 10427, 10429, 10433, 10453, 10457,
+            12953, 15923, 17389, 19427, 23719, 29173, 31397, 37199, 41299, 43291,
+            47293, 53197, 59393, 61291, 67297, 71293, 73297, 79193, 83297, 89197,
+            91199, 97291, 98317, 99991
+        ];
+        return primes;
+    }
+
     initializeEventListeners() {
-        // Add guess button
+        // Mode toggle buttons
+        document.getElementById('autoDemoBtn').addEventListener('click', () => {
+            this.switchMode('auto');
+        });
+
+        document.getElementById('manualModeBtn').addEventListener('click', () => {
+            this.switchMode('manual');
+        });
+
+        // Auto demo controls
+        document.getElementById('newGameBtn').addEventListener('click', () => {
+            this.startNewAutoGame();
+        });
+
+        document.getElementById('playPauseBtn').addEventListener('click', () => {
+            this.togglePlayPause();
+        });
+
+        document.getElementById('stepBtn').addEventListener('click', () => {
+            this.stepAutoGame();
+        });
+
+        document.getElementById('speedControl').addEventListener('change', (e) => {
+            this.autoGame.speed = e.target.value;
+        });
+
+        document.getElementById('targetPrime').addEventListener('input', (e) => {
+            e.target.value = e.target.value.replace(/[^0-9]/g, '');
+        });
+
+        // Manual mode controls
         document.getElementById('addGuessBtn').addEventListener('click', () => {
-            this.addGuess();
+            this.addManualGuess();
         });
 
-        // Get suggestions button
         document.getElementById('getSuggestionsBtn').addEventListener('click', () => {
-            this.getSuggestions();
+            this.getManualSuggestions();
         });
 
-        // Clear history button
         document.getElementById('clearHistoryBtn').addEventListener('click', () => {
-            this.clearHistory();
+            this.clearManualHistory();
         });
 
-        // Enter key handlers
+        // Manual mode input handlers
         document.getElementById('guessInput').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 document.getElementById('feedbackInput').focus();
@@ -34,35 +87,308 @@ class PrimelSolverGitHub {
 
         document.getElementById('feedbackInput').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
-                this.addGuess();
+                this.addManualGuess();
             }
         });
 
         // Input validation
         document.getElementById('guessInput').addEventListener('input', (e) => {
-            // Only allow digits
             e.target.value = e.target.value.replace(/[^0-9]/g, '');
         });
 
         document.getElementById('feedbackInput').addEventListener('input', (e) => {
-            // Only allow 0, 1, 2
             e.target.value = e.target.value.replace(/[^012]/g, '');
         });
     }
 
     initializeGame() {
+        this.createGameBoard();
+        this.switchMode('auto');
         this.updateGameStats(8363, 0);
-        this.showMessage('Demo initialized - Note: This is a simplified version for GitHub Pages', 'info');
+        this.showMessage('Demo initialized - Click "New Game" to start the auto demo', 'info');
     }
 
-    addGuess() {
+    switchMode(mode) {
+        this.currentMode = mode;
+        
+        // Update button states
+        document.getElementById('autoDemoBtn').classList.toggle('active', mode === 'auto');
+        document.getElementById('manualModeBtn').classList.toggle('active', mode === 'manual');
+        
+        // Show/hide mode sections
+        document.getElementById('autoDemoMode').classList.toggle('active', mode === 'auto');
+        document.getElementById('manualMode').classList.toggle('active', mode === 'manual');
+        
+        if (mode === 'manual') {
+            this.updateManualGameStats(this.remainingPrimes, this.gameHistory.length);
+        }
+    }
+
+    createGameBoard() {
+        const gameBoard = document.getElementById('gameBoard');
+        gameBoard.innerHTML = '';
+        
+        for (let row = 0; row < 6; row++) {
+            const guessRow = document.createElement('div');
+            guessRow.className = 'guess-row';
+            guessRow.id = `row-${row}`;
+            
+            for (let col = 0; col < 5; col++) {
+                const cell = document.createElement('div');
+                cell.className = 'game-cell';
+                cell.id = `cell-${row}-${col}`;
+                guessRow.appendChild(cell);
+            }
+            
+            gameBoard.appendChild(guessRow);
+        }
+    }
+
+    startNewAutoGame() {
+        // Get target prime
+        const targetInput = document.getElementById('targetPrime');
+        let target = targetInput.value.trim();
+        
+        if (!target) {
+            // Random prime
+            target = this.primeList[Math.floor(Math.random() * this.primeList.length)];
+            targetInput.placeholder = target.toString();
+        } else {
+            target = parseInt(target);
+            if (!this.validateGuess(target.toString())) {
+                this.showMessage('Please enter a valid 5-digit prime', 'error');
+                return;
+            }
+        }
+
+        // Initialize auto game
+        this.autoGame = {
+            target: target,
+            currentGuess: 0,
+            isPlaying: true,
+            isPaused: false,
+            speed: document.getElementById('speedControl').value,
+            gameBoard: [],
+            availablePrimes: [...this.primeList]
+        };
+
+        // Reset UI
+        this.createGameBoard();
+        this.updateGameStatus('Game started! Calculating first guess...');
+        this.updateAutoGameStats(this.primeList.length, 0, target);
+        
+        // Update controls
+        document.getElementById('playPauseBtn').textContent = '⏸️ Pause';
+        document.getElementById('newGameBtn').textContent = 'New Game';
+        
+        // Start the game loop
+        setTimeout(() => this.playAutoGameStep(), 1000);
+    }
+
+    async playAutoGameStep() {
+        if (!this.autoGame.isPlaying || this.autoGame.isPaused) return;
+        
+        if (this.autoGame.currentGuess >= 6) {
+            this.endAutoGame(false);
+            return;
+        }
+
+        // Calculate optimal guess
+        this.updateGameStatus('Calculating optimal guess...');
+        this.showAutoLoadingSpinner(true);
+        
+        // Simulate calculation delay
+        await this.delay(this.getSpeedDelay());
+        
+        const optimalGuess = this.calculateOptimalGuess();
+        const feedback = this.calculateFeedback(optimalGuess, this.autoGame.target);
+        
+        // Display the guess on the board
+        this.displayGuessOnBoard(this.autoGame.currentGuess, optimalGuess, feedback);
+        
+        // Update game state
+        this.autoGame.gameBoard.push({ guess: optimalGuess, feedback });
+        this.autoGame.currentGuess++;
+        
+        // Filter available primes based on feedback
+        this.autoGame.availablePrimes = this.filterPrimes(this.autoGame.availablePrimes, optimalGuess, feedback);
+        
+        // Update stats
+        this.updateAutoGameStats(this.autoGame.availablePrimes.length, this.autoGame.currentGuess, this.autoGame.target);
+        
+        // Generate and display suggestions for next guess
+        this.displayAutoSuggestions();
+        this.showAutoLoadingSpinner(false);
+        
+        // Check if won
+        if (feedback.every(f => f === 2)) {
+            this.endAutoGame(true);
+            return;
+        }
+        
+        // Continue to next guess
+        this.updateGameStatus(`Guess ${this.autoGame.currentGuess}: ${optimalGuess} - Preparing next guess...`);
+        
+        if (this.autoGame.isPlaying && !this.autoGame.isPaused) {
+            setTimeout(() => this.playAutoGameStep(), this.getSpeedDelay() * 2);
+        }
+    }
+
+    stepAutoGame() {
+        if (!this.autoGame.target) {
+            this.showMessage('Start a new game first', 'error');
+            return;
+        }
+        
+        this.autoGame.isPaused = true;
+        document.getElementById('playPauseBtn').textContent = '▶️ Play';
+        this.playAutoGameStep();
+    }
+
+    togglePlayPause() {
+        if (!this.autoGame.target) {
+            this.showMessage('Start a new game first', 'error');
+            return;
+        }
+        
+        this.autoGame.isPaused = !this.autoGame.isPaused;
+        document.getElementById('playPauseBtn').textContent = this.autoGame.isPaused ? '▶️ Play' : '⏸️ Pause';
+        
+        if (!this.autoGame.isPaused && this.autoGame.isPlaying) {
+            setTimeout(() => this.playAutoGameStep(), 500);
+        }
+    }
+
+    calculateOptimalGuess() {
+        // Simplified entropy calculation for demo
+        if (this.autoGame.currentGuess === 0) {
+            // Good starting guesses
+            const startingGuesses = [12953, 15923, 17389];
+            return startingGuesses[Math.floor(Math.random() * startingGuesses.length)];
+        }
+        
+        // For subsequent guesses, pick from available primes
+        if (this.autoGame.availablePrimes.length > 0) {
+            return this.autoGame.availablePrimes[Math.floor(Math.random() * Math.min(10, this.autoGame.availablePrimes.length))];
+        }
+        
+        return this.primeList[Math.floor(Math.random() * this.primeList.length)];
+    }
+
+    calculateFeedback(guess, target) {
+        const guessStr = guess.toString().padStart(5, '0');
+        const targetStr = target.toString().padStart(5, '0');
+        const feedback = [0, 0, 0, 0, 0];
+        
+        // Check for correct positions (green)
+        for (let i = 0; i < 5; i++) {
+            if (guessStr[i] === targetStr[i]) {
+                feedback[i] = 2;
+            }
+        }
+        
+        // Check for correct digits in wrong positions (yellow)
+        for (let i = 0; i < 5; i++) {
+            if (feedback[i] === 0) { // Not already green
+                for (let j = 0; j < 5; j++) {
+                    if (i !== j && feedback[j] !== 2 && guessStr[i] === targetStr[j]) {
+                        feedback[i] = 1;
+                        break;
+                    }
+                }
+            }
+        }
+        
+        return feedback;
+    }
+
+    filterPrimes(primes, guess, feedback) {
+        return primes.filter(prime => {
+            const testFeedback = this.calculateFeedback(guess, prime);
+            return JSON.stringify(testFeedback) === JSON.stringify(feedback);
+        });
+    }
+
+    displayGuessOnBoard(row, guess, feedback) {
+        const guessStr = guess.toString().padStart(5, '0');
+        
+        for (let col = 0; col < 5; col++) {
+            const cell = document.getElementById(`cell-${row}-${col}`);
+            cell.textContent = guessStr[col];
+            cell.classList.add('filled');
+            
+            // Add feedback styling with animation
+            setTimeout(() => {
+                cell.classList.add('cell-flip');
+                setTimeout(() => {
+                    if (feedback[col] === 2) {
+                        cell.classList.add('correct');
+                    } else if (feedback[col] === 1) {
+                        cell.classList.add('partial');
+                    } else {
+                        cell.classList.add('incorrect');
+                    }
+                }, 300);
+            }, col * 100);
+        }
+    }
+
+    displayAutoSuggestions() {
+        const suggestions = this.generateMockSuggestions(this.autoGame.availablePrimes.length);
+        this.displaySuggestions(suggestions, 'suggestionsResults');
+    }
+
+    endAutoGame(won) {
+        this.autoGame.isPlaying = false;
+        this.autoGame.isPaused = false;
+        
+        const status = won ? 
+            `🎉 Solved in ${this.autoGame.currentGuess} guesses! Target was ${this.autoGame.target}` :
+            `😞 Game over! Target was ${this.autoGame.target}`;
+        
+        this.updateGameStatus(status);
+        document.getElementById('gameStatus').classList.add(won ? 'won' : 'lost');
+        document.getElementById('playPauseBtn').textContent = '▶️ Play';
+        
+        this.showMessage(won ? 'Puzzle solved!' : 'Game over!', won ? 'success' : 'error');
+    }
+
+    getSpeedDelay() {
+        switch (this.autoGame.speed) {
+            case 'slow': return 3000;
+            case 'fast': return 800;
+            default: return 1500; // normal
+        }
+    }
+
+    delay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    updateGameStatus(message) {
+        const statusEl = document.getElementById('gameStatus');
+        statusEl.innerHTML = `<p>${message}</p>`;
+        statusEl.className = 'game-status'; // Reset classes
+    }
+
+    updateAutoGameStats(remainingPrimes, guessesMade, target) {
+        document.getElementById('remainingPrimes').textContent = remainingPrimes.toLocaleString();
+        document.getElementById('guessesMade').textContent = guessesMade;
+        document.getElementById('targetDisplay').textContent = target || 'Hidden';
+    }
+
+    showAutoLoadingSpinner(show) {
+        document.getElementById('loadingSpinner').style.display = show ? 'block' : 'none';
+    }
+
+    // Manual Mode Methods
+    addManualGuess() {
         const guessInput = document.getElementById('guessInput');
         const feedbackInput = document.getElementById('feedbackInput');
         
         const guess = guessInput.value.trim();
         const feedback = feedbackInput.value.trim();
 
-        // Validate inputs
         if (!this.validateGuess(guess)) {
             this.showMessage('Please enter a valid 5-digit number', 'error');
             return;
@@ -73,92 +399,46 @@ class PrimelSolverGitHub {
             return;
         }
 
-        // Add to local history
         this.gameHistory.push({
             guess: parseInt(guess),
             feedback: feedback.split('').map(Number)
         });
 
-        // Simulate prime list reduction (simplified calculation)
         this.remainingPrimes = Math.max(1, Math.floor(this.remainingPrimes * this.getReductionFactor(feedback)));
 
-        // Update UI
-        this.updateGuessHistory();
-        this.updateGameStats(this.remainingPrimes, this.gameHistory.length);
-        this.clearInputs();
+        this.updateManualGuessHistory();
+        this.updateManualGameStats(this.remainingPrimes, this.gameHistory.length);
+        this.clearManualInputs();
         this.showMessage('Guess added successfully', 'success');
-
-        // Clear previous suggestions
-        this.clearSuggestions();
+        this.clearManualSuggestions();
     }
 
-    getReductionFactor(feedback) {
-        // Simulate how much the prime list would be reduced based on feedback
-        const greenCount = feedback.split('').filter(f => f === '2').length;
-        const yellowCount = feedback.split('').filter(f => f === '1').length;
-        
-        if (greenCount === 5) return 0.0001; // Almost solved
-        if (greenCount >= 3) return 0.1;     // Very constraining
-        if (greenCount >= 1) return 0.3;     // Somewhat constraining
-        if (yellowCount >= 3) return 0.4;    // Yellow letters help
-        return 0.6; // Mostly gray letters
-    }
+    getManualSuggestions() {
+        const loadingSpinner = document.getElementById('manualLoadingSpinner');
+        const suggestionsResults = document.getElementById('manualSuggestionsResults');
 
-    getSuggestions() {
-        const loadingSpinner = document.getElementById('loadingSpinner');
-        const suggestionsResults = document.getElementById('suggestionsResults');
-
-        // Show loading spinner
         loadingSpinner.style.display = 'block';
         suggestionsResults.innerHTML = '';
 
-        // Simulate API delay
         setTimeout(() => {
-            const mockSuggestions = this.generateMockSuggestions();
-            this.displaySuggestions(mockSuggestions);
+            const mockSuggestions = this.generateMockSuggestions(this.remainingPrimes);
+            this.displaySuggestions(mockSuggestions, 'manualSuggestionsResults');
             this.showMessage('Suggestions generated (demo version)', 'success');
             loadingSpinner.style.display = 'none';
         }, 1500);
     }
 
-    generateMockSuggestions() {
-        // Generate realistic mock suggestions based on game state
-        const basePrimes = [12953, 15923, 17389, 19427, 23719];
-        const suggestions = [];
-
-        for (let i = 0; i < Math.min(5, this.remainingPrimes); i++) {
-            const prime = basePrimes[i] || (10000 + Math.floor(Math.random() * 89999));
-            const entropy = (6.8 - i * 0.3 - this.gameHistory.length * 0.2).toFixed(6);
-            
-            suggestions.push({
-                prime: prime,
-                entropy: parseFloat(entropy),
-                rank: i + 1
-            });
-        }
-
-        return suggestions;
-    }
-
-    clearHistory() {
+    clearManualHistory() {
         this.gameHistory = [];
         this.remainingPrimes = 8363;
-        this.updateGuessHistory();
-        this.updateGameStats(this.remainingPrimes, 0);
-        this.clearSuggestions();
-        this.clearInputs();
+        this.updateManualGuessHistory();
+        this.updateManualGameStats(this.remainingPrimes, 0);
+        this.clearManualSuggestions();
+        this.clearManualInputs();
         this.showMessage('Game history cleared', 'success');
     }
 
-    validateGuess(guess) {
-        return /^\d{5}$/.test(guess) && parseInt(guess) >= 10000 && parseInt(guess) <= 99999;
-    }
-
-    validateFeedback(feedback) {
-        return /^[012]{5}$/.test(feedback);
-    }
-
-    updateGuessHistory() {
+    updateManualGuessHistory() {
         const historyContainer = document.getElementById('guessHistory');
         
         if (this.gameHistory.length === 0) {
@@ -185,7 +465,6 @@ class PrimelSolverGitHub {
                 digit.className = 'guess-digit';
                 digit.textContent = guessStr[i];
                 
-                // Add color based on feedback
                 if (entry.feedback[i] === 2) {
                     digit.classList.add('correct');
                 } else if (entry.feedback[i] === 1) {
@@ -202,7 +481,7 @@ class PrimelSolverGitHub {
             removeBtn.innerHTML = '×';
             removeBtn.title = 'Remove this guess';
             removeBtn.addEventListener('click', () => {
-                this.removeGuess(index);
+                this.showMessage('To remove a guess, please clear all history and re-enter your guesses', 'info');
             });
             
             guessEntry.appendChild(guessNumber);
@@ -213,12 +492,44 @@ class PrimelSolverGitHub {
         });
     }
 
-    removeGuess(index) {
-        this.showMessage('To remove a guess, please clear all history and re-enter your guesses', 'info');
+    updateManualGameStats(remainingPrimes, guessesMade) {
+        document.getElementById('manualRemainingPrimes').textContent = remainingPrimes.toLocaleString();
+        document.getElementById('manualGuessesMade').textContent = guessesMade;
     }
 
-    displaySuggestions(suggestions) {
-        const suggestionsResults = document.getElementById('suggestionsResults');
+    clearManualSuggestions() {
+        const suggestionsResults = document.getElementById('manualSuggestionsResults');
+        suggestionsResults.innerHTML = '<p class="no-results">Enter your game state and click "Get Optimal Guesses" to see recommendations.</p>';
+    }
+
+    clearManualInputs() {
+        document.getElementById('guessInput').value = '';
+        document.getElementById('feedbackInput').value = '';
+        document.getElementById('guessInput').focus();
+    }
+
+    // Shared Methods
+    generateMockSuggestions(remainingCount = null) {
+        const basePrimes = [12953, 15923, 17389, 19427, 23719];
+        const suggestions = [];
+        const count = remainingCount || this.remainingPrimes;
+
+        for (let i = 0; i < Math.min(5, Math.max(1, count)); i++) {
+            const prime = basePrimes[i] || this.primeList[Math.floor(Math.random() * this.primeList.length)];
+            const entropy = (6.8 - i * 0.3 - (this.gameHistory.length || this.autoGame.currentGuess) * 0.2).toFixed(6);
+            
+            suggestions.push({
+                prime: prime,
+                entropy: parseFloat(entropy),
+                rank: i + 1
+            });
+        }
+
+        return suggestions;
+    }
+
+    displaySuggestions(suggestions, containerId) {
+        const suggestionsResults = document.getElementById(containerId);
         
         if (!suggestions || suggestions.length === 0) {
             suggestionsResults.innerHTML = '<p class="no-results">No suggestions available</p>';
@@ -256,24 +567,26 @@ class PrimelSolverGitHub {
         });
     }
 
-    updateGameStats(remainingPrimes, guessesMade) {
-        document.getElementById('remainingPrimes').textContent = remainingPrimes.toLocaleString();
-        document.getElementById('guessesMade').textContent = guessesMade;
+    getReductionFactor(feedback) {
+        const greenCount = feedback.split('').filter(f => f === '2').length;
+        const yellowCount = feedback.split('').filter(f => f === '1').length;
+        
+        if (greenCount === 5) return 0.0001;
+        if (greenCount >= 3) return 0.1;
+        if (greenCount >= 1) return 0.3;
+        if (yellowCount >= 3) return 0.4;
+        return 0.6;
     }
 
-    clearSuggestions() {
-        const suggestionsResults = document.getElementById('suggestionsResults');
-        suggestionsResults.innerHTML = '<p class="no-results">Enter your game state and click "Get Optimal Guesses" to see recommendations.</p>';
+    validateGuess(guess) {
+        return /^\d{5}$/.test(guess) && parseInt(guess) >= 10000 && parseInt(guess) <= 99999;
     }
 
-    clearInputs() {
-        document.getElementById('guessInput').value = '';
-        document.getElementById('feedbackInput').value = '';
-        document.getElementById('guessInput').focus();
+    validateFeedback(feedback) {
+        return /^[012]{5}$/.test(feedback);
     }
 
     showMessage(message, type = 'info') {
-        // Create a temporary message element
         const messageEl = document.createElement('div');
         messageEl.className = `message message-${type}`;
         messageEl.textContent = message;
@@ -290,7 +603,6 @@ class PrimelSolverGitHub {
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         `;
 
-        // Set background color based on type
         switch (type) {
             case 'success':
                 messageEl.style.backgroundColor = '#10b981';
@@ -306,7 +618,6 @@ class PrimelSolverGitHub {
 
         document.body.appendChild(messageEl);
 
-        // Remove after 3 seconds
         setTimeout(() => {
             if (messageEl.parentNode) {
                 messageEl.parentNode.removeChild(messageEl);

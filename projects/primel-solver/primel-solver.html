@@ -53,54 +53,125 @@
             <div class="container">
                 <h2>Interactive Demo</h2>
                 <p class="demo-description">
-                    Enter your current Primel game state below to get optimal next guesses based on entropy calculations.
+                    Watch the solver in action or try it yourself with your own Primel game state.
                 </p>
                 
+                <!-- Mode Toggle -->
+                <div class="mode-toggle">
+                    <button id="autoDemoBtn" class="mode-btn active">Auto Demo</button>
+                    <button id="manualModeBtn" class="mode-btn">Manual Mode</button>
+                </div>
+                
                 <div class="demo-container">
-                    <div class="input-section">
-                        <h3>Current Game State</h3>
-                        <div class="guess-history" id="guessHistory">
-                            <!-- Guess entries will be added here dynamically -->
-                        </div>
-                        
-                        <div class="add-guess-section">
-                            <h4>Add a Guess</h4>
-                            <div class="guess-input-row">
-                                <input type="text" id="guessInput" placeholder="Enter 5-digit prime" maxlength="5" class="guess-input">
-                                <div class="feedback-inputs">
-                                    <input type="text" id="feedbackInput" placeholder="01212" maxlength="5" class="feedback-input">
-                                    <span class="feedback-help">0=Gray, 1=Yellow, 2=Green</span>
+                    <!-- Auto Demo Mode -->
+                    <div id="autoDemoMode" class="demo-mode active">
+                        <div class="game-section">
+                            <div class="game-header">
+                                <h3>Primel Game Board</h3>
+                                <div class="game-controls">
+                                    <div class="target-input-group">
+                                        <label for="targetPrime">Target Prime:</label>
+                                        <input type="text" id="targetPrime" placeholder="Random" maxlength="5" class="target-input">
+                                        <button id="newGameBtn" class="btn btn-primary">New Game</button>
+                                    </div>
+                                    <div class="demo-controls">
+                                        <button id="playPauseBtn" class="btn btn-secondary">⏸️ Pause</button>
+                                        <button id="stepBtn" class="btn btn-secondary">Step</button>
+                                        <select id="speedControl" class="speed-control">
+                                            <option value="slow">Slow</option>
+                                            <option value="normal" selected>Normal</option>
+                                            <option value="fast">Fast</option>
+                                        </select>
+                                    </div>
                                 </div>
-                                <button id="addGuessBtn" class="btn btn-primary">Add Guess</button>
+                            </div>
+                            
+                            <div class="game-board" id="gameBoard">
+                                <!-- 6 guess rows will be generated here -->
+                            </div>
+                            
+                            <div class="game-status" id="gameStatus">
+                                <p>Click "New Game" to start the demo</p>
                             </div>
                         </div>
-                        
-                        <div class="action-buttons">
-                            <button id="getSuggestionsBtn" class="btn btn-primary">Get Optimal Guesses</button>
-                            <button id="clearHistoryBtn" class="btn btn-secondary">Clear History</button>
+
+                        <div class="analysis-section">
+                            <h3>Solver Analysis</h3>
+                            <div id="loadingSpinner" class="loading-spinner" style="display: none;">
+                                <div class="spinner"></div>
+                                <p>Calculating optimal guesses...</p>
+                            </div>
+                            <div id="suggestionsResults" class="suggestions-results">
+                                <p class="no-results">Start a game to see optimal guesses.</p>
+                            </div>
+                            
+                            <div class="stats-section">
+                                <h4>Game Statistics</h4>
+                                <div id="gameStats" class="game-stats">
+                                    <div class="stat-item">
+                                        <span class="stat-label">Remaining Primes:</span>
+                                        <span class="stat-value" id="remainingPrimes">8,363</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">Guesses Made:</span>
+                                        <span class="stat-value" id="guessesMade">0</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">Target Prime:</span>
+                                        <span class="stat-value" id="targetDisplay">Hidden</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="results-section">
-                        <h3>Optimal Next Guesses</h3>
-                        <div id="loadingSpinner" class="loading-spinner" style="display: none;">
-                            <div class="spinner"></div>
-                            <p>Calculating optimal guesses...</p>
-                        </div>
-                        <div id="suggestionsResults" class="suggestions-results">
-                            <p class="no-results">Enter your game state and click "Get Optimal Guesses" to see recommendations.</p>
-                        </div>
-                        
-                        <div class="stats-section">
-                            <h4>Game Statistics</h4>
-                            <div id="gameStats" class="game-stats">
-                                <div class="stat-item">
-                                    <span class="stat-label">Remaining Primes:</span>
-                                    <span class="stat-value" id="remainingPrimes">8,363</span>
+                    <!-- Manual Mode -->
+                    <div id="manualMode" class="demo-mode">
+                        <div class="input-section">
+                            <h3>Current Game State</h3>
+                            <div class="guess-history" id="guessHistory">
+                                <!-- Manual guess entries will be added here dynamically -->
+                            </div>
+                            
+                            <div class="add-guess-section">
+                                <h4>Add a Guess</h4>
+                                <div class="guess-input-row">
+                                    <input type="text" id="guessInput" placeholder="Enter 5-digit prime" maxlength="5" class="guess-input">
+                                    <div class="feedback-inputs">
+                                        <input type="text" id="feedbackInput" placeholder="01212" maxlength="5" class="feedback-input">
+                                        <span class="feedback-help">0=Gray, 1=Yellow, 2=Green</span>
+                                    </div>
+                                    <button id="addGuessBtn" class="btn btn-primary">Add Guess</button>
                                 </div>
-                                <div class="stat-item">
-                                    <span class="stat-label">Guesses Made:</span>
-                                    <span class="stat-value" id="guessesMade">0</span>
+                            </div>
+                            
+                            <div class="action-buttons">
+                                <button id="getSuggestionsBtn" class="btn btn-primary">Get Optimal Guesses</button>
+                                <button id="clearHistoryBtn" class="btn btn-secondary">Clear History</button>
+                            </div>
+                        </div>
+
+                        <div class="results-section">
+                            <h3>Optimal Next Guesses</h3>
+                            <div id="manualLoadingSpinner" class="loading-spinner" style="display: none;">
+                                <div class="spinner"></div>
+                                <p>Calculating optimal guesses...</p>
+                            </div>
+                            <div id="manualSuggestionsResults" class="suggestions-results">
+                                <p class="no-results">Enter your game state and click "Get Optimal Guesses" to see recommendations.</p>
+                            </div>
+                            
+                            <div class="stats-section">
+                                <h4>Game Statistics</h4>
+                                <div id="manualGameStats" class="game-stats">
+                                    <div class="stat-item">
+                                        <span class="stat-label">Remaining Primes:</span>
+                                        <span class="stat-value" id="manualRemainingPrimes">8,363</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">Guesses Made:</span>
+                                        <span class="stat-value" id="manualGuessesMade">0</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
