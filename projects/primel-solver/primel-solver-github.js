@@ -238,7 +238,7 @@ class PrimelSolverGitHub {
         // Reset UI
         this.createGameBoard();
         this.updateGameStatus('Game started! Calculating first guess...');
-        this.updateAutoGameStats(this.autoGame.availablePrimes.length, 0, target);
+        this.updateAutoGameStats(this.autoGame.availablePrimes ? this.autoGame.availablePrimes.length : 0, 0, target);
         
         // Show initial suggestions before any guess is made
         this.displayInitialSuggestions();
