@@ -1,0 +1,488 @@
+/* Primel Solver Specific Styles */
+
+.solver-main {
+    padding-top: 70px;
+}
+
+/* Project Header */
+.project-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 80px 0;
+    text-align: center;
+}
+
+.project-header h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.project-subtitle {
+    font-size: 1.3rem;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.project-meta {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.meta-item {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* Demo Section */
+.demo-section {
+    padding: 80px 0;
+    background-color: #f9fafb;
+}
+
+.demo-description {
+    text-align: center;
+    font-size: 1.1rem;
+    color: #4b5563;
+    margin-bottom: 3rem;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.demo-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.input-section, .results-section {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.input-section h3, .results-section h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: #1f2937;
+}
+
+/* Guess History */
+.guess-history {
+    min-height: 120px;
+    border: 2px dashed #d1d5db;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 2rem;
+    background-color: #f9fafb;
+}
+
+.guess-entry {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem;
+    background: white;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.guess-number {
+    font-weight: 600;
+    color: #6b7280;
+    min-width: 20px;
+}
+
+.guess-digits {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.guess-digit {
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    font-weight: 600;
+    color: white;
+}
+
+.guess-digit.correct {
+    background-color: #10b981;
+}
+
+.guess-digit.partial {
+    background-color: #f59e0b;
+}
+
+.guess-digit.incorrect {
+    background-color: #6b7280;
+}
+
+.remove-guess {
+    margin-left: auto;
+    background: none;
+    border: none;
+    color: #ef4444;
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0.25rem;
+}
+
+/* Add Guess Section */
+.add-guess-section {
+    margin-bottom: 2rem;
+}
+
+.add-guess-section h4 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    color: #374151;
+}
+
+.guess-input-row {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.guess-input {
+    padding: 0.75rem;
+    border: 2px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-align: center;
+    width: 150px;
+}
+
+.guess-input:focus {
+    outline: none;
+    border-color: #2563eb;
+}
+
+.feedback-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.feedback-input {
+    padding: 0.75rem;
+    border: 2px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-align: center;
+    width: 120px;
+}
+
+.feedback-input:focus {
+    outline: none;
+    border-color: #2563eb;
+}
+
+.feedback-help {
+    font-size: 0.8rem;
+    color: #6b7280;
+    text-align: center;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+/* Results Section */
+.loading-spinner {
+    text-align: center;
+    padding: 2rem;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #e5e7eb;
+    border-top: 4px solid #2563eb;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.suggestions-results {
+    min-height: 200px;
+}
+
+.no-results {
+    text-align: center;
+    color: #6b7280;
+    font-style: italic;
+    padding: 2rem;
+}
+
+.suggestion-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: #f9fafb;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    border-left: 4px solid #2563eb;
+}
+
+.suggestion-prime {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.suggestion-entropy {
+    font-size: 0.9rem;
+    color: #6b7280;
+}
+
+.suggestion-rank {
+    background: #2563eb;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+/* Game Stats */
+.stats-section {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+.stats-section h4 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    color: #374151;
+}
+
+.game-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.stat-label {
+    color: #6b7280;
+}
+
+.stat-value {
+    font-weight: 600;
+    color: #1f2937;
+}
+
+/* Technical Section */
+.technical-section {
+    padding: 80px 0;
+}
+
+.tech-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.tech-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.tech-card h3 {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+    color: #1f2937;
+}
+
+.tech-card p {
+    color: #4b5563;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.tech-card ul {
+    color: #4b5563;
+    padding-left: 1.5rem;
+}
+
+.tech-card li {
+    margin-bottom: 0.5rem;
+}
+
+.external-link {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.external-link:hover {
+    text-decoration: underline;
+}
+
+.formula {
+    background: #f3f4f6;
+    padding: 1rem;
+    border-radius: 8px;
+    font-family: 'Courier New', monospace;
+    text-align: center;
+    font-size: 1.1rem;
+    margin: 1rem 0;
+    border-left: 4px solid #2563eb;
+}
+
+/* Code Section */
+.code-section {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.code-section h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: #1f2937;
+}
+
+.code-section pre {
+    background: #1f2937;
+    color: #e5e7eb;
+    padding: 1.5rem;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.code-section code {
+    font-family: 'Courier New', monospace;
+}
+
+/* Links Section */
+.links-section {
+    padding: 80px 0;
+    background-color: #f9fafb;
+}
+
+.resource-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.resource-link {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    text-decoration: none;
+    color: inherit;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.resource-link:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.resource-link h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+    color: #2563eb;
+}
+
+.resource-link p {
+    color: #6b7280;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .project-header h1 {
+        font-size: 2rem;
+    }
+    
+    .demo-container {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+    .guess-input-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .guess-input, .feedback-input {
+        width: 100%;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+    }
+    
+    .tech-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .project-meta {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .input-section, .results-section {
+        padding: 1.5rem;
+    }
+    
+    .guess-digits {
+        gap: 0.125rem;
+    }
+    
+    .guess-digit {
+        width: 30px;
+        height: 30px;
+        font-size: 0.9rem;
+    }
+}

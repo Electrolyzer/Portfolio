@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jesse's Portfolio</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2>Jesse's Portfolio</h2>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#about" class="nav-link">About</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#projects" class="nav-link">Projects</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#contact" class="nav-link">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Hi, I'm Jesse</h1>
+                <p class="hero-subtitle">Software Developer & Problem Solver</p>
+                <p class="hero-description">
+                    I enjoy applying mathematical concepts to solve complex problems through code.
+                    Currently exploring information theory, algorithms, and their practical applications.
+                </p>
+                <div class="hero-buttons">
+                    <a href="#projects" class="btn btn-primary">View My Work</a>
+                    <a href="#contact" class="btn btn-secondary">Get In Touch</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="about">
+            <div class="container">
+                <h2>About Me</h2>
+                <div class="about-content">
+                    <div class="about-text">
+                        <p>
+                            I'm a software developer passionate about combining mathematical theory with practical programming solutions. 
+                            I enjoy taking complex concepts from academic sources and implementing them in clean, efficient code.
+                        </p>
+                        <p>
+                            My recent work focuses on information theory applications, particularly in game-solving algorithms 
+                            and optimization problems. I believe in writing code that is not only functional but also mathematically sound.
+                        </p>
+                    </div>
+                    <div class="skills">
+                        <h3>Technical Skills</h3>
+                        <div class="skill-tags">
+                            <span class="skill-tag">Python</span>
+                            <span class="skill-tag">JavaScript</span>
+                            <span class="skill-tag">HTML/CSS</span>
+                            <span class="skill-tag">NumPy</span>
+                            <span class="skill-tag">Pandas</span>
+                            <span class="skill-tag">Flask</span>
+                            <span class="skill-tag">Information Theory</span>
+                            <span class="skill-tag">Algorithm Design</span>
+                            <span class="skill-tag">MATLAB</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="projects">
+            <div class="container">
+                <h2>Featured Projects</h2>
+                <div class="projects-grid">
+                    <div class="project-card featured">
+                        <div class="project-image">
+                            <div class="project-placeholder">
+                                <h3>Primel Solver</h3>
+                                <p>Information Theory Applied</p>
+                            </div>
+                        </div>
+                        <div class="project-content">
+                            <h3>Primel Entropy-Based Solver</h3>
+                            <p>
+                                An intelligent solver for Primel (prime number Wordle) using information theory and entropy calculations. 
+                                Implements optimal guess selection algorithms inspired by 3Blue1Brown's analysis of Wordle strategies.
+                            </p>
+                            <div class="project-tech">
+                                <span class="tech-tag">Python</span>
+                                <span class="tech-tag">NumPy</span>
+                                <span class="tech-tag">Information Theory</span>
+                                <span class="tech-tag">Flask API</span>
+                            </div>
+                            <div class="project-links">
+                                <a href="primel-solver.html" class="btn btn-primary">Live Demo</a>
+                                <a href="https://github.com/yourusername/primel-solver" class="btn btn-secondary" target="_blank">View Code</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Placeholder for future projects -->
+                    <div class="project-card">
+                        <div class="project-image">
+                            <div class="project-placeholder">
+                                <h3>Coming Soon</h3>
+                                <p>More Projects</p>
+                            </div>
+                        </div>
+                        <div class="project-content">
+                            <h3>Future Project</h3>
+                            <p>More exciting projects coming soon...</p>
+                            <div class="project-tech">
+                                <span class="tech-tag">TBD</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="contact">
+            <div class="container">
+                <h2>Get In Touch</h2>
+                <p>I'm always interested in discussing new opportunities and interesting problems to solve.</p>
+                <div class="contact-links">
+                    <a href="mailto:your.email@example.com" class="contact-link">
+                        <span>Email</span>
+                    </a>
+                    <a href="https://linkedin.com/in/yourprofile" class="contact-link" target="_blank">
+                        <span>LinkedIn</span>
+                    </a>
+                    <a href="https://github.com/yourusername" class="contact-link" target="_blank">
+                        <span>GitHub</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Jesse. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
