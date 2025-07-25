@@ -201,6 +201,13 @@ class PrimelSolverGitHub {
     }
 
     startNewAutoGame() {
+        // Check if prime list is loaded
+        if (!this.primeList || this.primeList.length === 0) {
+            this.showMessage('Prime list still loading, please wait...', 'info');
+            setTimeout(() => this.startNewAutoGame(), 1000);
+            return;
+        }
+        
         // Get target prime
         const targetInput = document.getElementById('targetPrime');
         let target = targetInput.value.trim();
