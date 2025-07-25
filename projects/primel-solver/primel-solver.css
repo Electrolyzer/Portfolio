@@ -696,6 +696,19 @@
     80% { transform: translateY(-5px); }
 }
 
+.suggestion-animate {
+    animation: slideInUp 0.4s ease-out forwards;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+@keyframes slideInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 @media (max-width: 768px) {
     .demo-mode.active {
         grid-template-columns: 1fr;

@@ -419,16 +419,8 @@ class PrimelSolverGitHub {
     }
 
     displayAutoSuggestions() {
-        // Clear suggestions during loading
-        document.getElementById('suggestionsResults').innerHTML = '';
-        this.showAutoLoadingSpinner(true);
-        
-        // Calculate suggestions with a small delay for better UX
-        setTimeout(() => {
-            const suggestions = this.generateMockSuggestions(this.autoGame.availablePrimes.length);
-            this.displaySuggestions(suggestions, 'suggestionsResults');
-            this.showAutoLoadingSpinner(false);
-        }, 300);
+        const suggestions = this.generateMockSuggestions(this.autoGame.availablePrimes.length);
+        this.displaySuggestionsWithAnimation(suggestions, 'suggestionsResults');
     }
     
     displayInitialSuggestions() {
@@ -706,6 +698,48 @@ class PrimelSolverGitHub {
         suggestions.forEach(suggestion => {
             const suggestionItem = document.createElement('div');
             suggestionItem.className = 'suggestion-item';
+            
+            const rank = document.createElement('div');
+            rank.className = 'suggestion-rank';
+            rank.textContent = suggestion.rank;
+            
+            const details = document.createElement('div');
+            details.style.flex = '1';
+            
+            const prime = document.createElement('div');
+            prime.className = 'suggestion-prime';
+            prime.textContent = suggestion.prime;
+            
+            const entropy = document.createElement('div');
+            entropy.className = 'suggestion-entropy';
+            entropy.textContent = `Entropy: ${suggestion.entropy}`;
+            
+            details.appendChild(prime);
+            details.appendChild(entropy);
+            
+            suggestionItem.appendChild(rank);
+            suggestionItem.appendChild(details);
+            
+            suggestionsResults.appendChild(suggestionItem);
+        });
+    }
+    
+    displaySuggestionsWithAnimation(suggestions, containerId) {
+        const suggestionsResults = document.getElementById(containerId);
+        
+        if (!suggestions || suggestions.length === 0) {
+            suggestionsResults.innerHTML = '<p class="no-results">No suggestions available</p>';
+            return;
+        }
+
+        // Clear existing suggestions
+        suggestionsResults.innerHTML = '';
+        
+        // Add suggestions with staggered animation
+        suggestions.forEach((suggestion, index) => {
+            const suggestionItem = document.createElement('div');
+            suggestionItem.className = 'suggestion-item suggestion-animate';
+            suggestionItem.style.animationDelay = `${index * 100}ms`;
             
             const rank = document.createElement('div');
             rank.className = 'suggestion-rank';
