@@ -19,18 +19,38 @@ class PrimelSolverGitHub {
         this.loadPrimeList();
     }
 
-    async loadPrimeList() {
+    async loadPrimeList(retryCount = 0) {
+        const maxRetries = 3;
+        
         try {
-            const response = await fetch('primelist.csv');
+            const response = await fetch('primelist.csv', {
+                cache: 'no-cache',
+                headers: {
+                    'Cache-Control': 'no-cache'
+                }
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            
             const csvText = await response.text();
+            
+            if (!csvText || csvText.trim().length === 0) {
+                throw new Error('Empty CSV file');
+            }
             
             // Parse CSV - assuming it's a simple list of primes, one per line
             this.primeList = csvText
                 .split('\n')
                 .map(line => line.trim())
-                .filter(line => line && !isNaN(line))
+                .filter(line => line && !isNaN(line) && line.length === 5)
                 .map(line => parseInt(line))
                 .filter(prime => prime >= 10000 && prime <= 99999);
+            
+            if (this.primeList.length === 0) {
+                throw new Error('No valid primes found in CSV');
+            }
             
             this.remainingPrimes = this.primeList.length;
             this.showMessage(`Loaded ${this.primeList.length} primes from database`, 'success');
@@ -39,8 +59,15 @@ class PrimelSolverGitHub {
             this.initializeGame();
             
         } catch (error) {
-            console.error('Error loading prime list:', error);
-            this.showMessage('Error loading prime database, using fallback list', 'error');
+            console.error(`Error loading prime list (attempt ${retryCount + 1}):`, error);
+            
+            if (retryCount < maxRetries) {
+                this.showMessage(`Retrying prime database load... (${retryCount + 1}/${maxRetries})`, 'info');
+                setTimeout(() => this.loadPrimeList(retryCount + 1), 1000);
+                return;
+            }
+            
+            this.showMessage('Using fallback prime list - CSV load failed', 'error');
             
             // Fallback to smaller list if CSV fails to load
             this.primeList = [
@@ -204,7 +231,7 @@ class PrimelSolverGitHub {
         // Reset UI
         this.createGameBoard();
         this.updateGameStatus('Game started! Calculating first guess...');
-        this.updateAutoGameStats(this.primeList.length, 0, target);
+        this.updateAutoGameStats(this.availablePrimes.length, 0, target);
         
         // Show initial suggestions before any guess is made
         this.displayInitialSuggestions();
@@ -385,8 +412,16 @@ class PrimelSolverGitHub {
     }
 
     displayAutoSuggestions() {
-        const suggestions = this.generateMockSuggestions(this.autoGame.availablePrimes.length);
-        this.displaySuggestions(suggestions, 'suggestionsResults');
+        // Clear suggestions during loading
+        document.getElementById('suggestionsResults').innerHTML = '';
+        this.showAutoLoadingSpinner(true);
+        
+        // Calculate suggestions with a small delay for better UX
+        setTimeout(() => {
+            const suggestions = this.generateMockSuggestions(this.autoGame.availablePrimes.length);
+            this.displaySuggestions(suggestions, 'suggestionsResults');
+            this.showAutoLoadingSpinner(false);
+        }, 300);
     }
     
     displayInitialSuggestions() {
