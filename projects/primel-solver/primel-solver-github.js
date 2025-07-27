@@ -252,9 +252,6 @@ class PrimelSolverGitHub {
         this.updateGameStatus('Game started! Calculating first guess...');
         this.updateAutoGameStats(this.autoGame.availablePrimes ? this.autoGame.availablePrimes.length : 0, 0, target);
 
-        // Show initial suggestions before any guess is made
-        this.displayInitialSuggestions();
-
         // Update controls
         document.getElementById('playPauseBtn').textContent = '⏸️ Pause';
         document.getElementById('newGameBtn').textContent = 'New Game';
@@ -273,12 +270,12 @@ class PrimelSolverGitHub {
 
         // Calculate optimal guess
         this.updateGameStatus('Calculating optimal guess...');
-        // this.showAutoLoadingSpinner(true);
+
+        // Generate and display suggestions for next guess (only if game continues)
+        const optimalGuess = this.displayAutoSuggestions();
 
         // Simulate calculation delay
         await this.delay(this.getSpeedDelay());
-
-        const optimalGuess = this.calculateOptimalGuess();
         const feedback = this.calculateFeedback(optimalGuess, this.autoGame.target);
 
         // Display the guess on the board
@@ -300,10 +297,6 @@ class PrimelSolverGitHub {
             // this.showAutoLoadingSpinner(false);
             return;
         }
-
-        // Generate and display suggestions for next guess (only if game continues)
-        this.displayAutoSuggestions();
-        // this.showAutoLoadingSpinner(false);
 
         // Continue to next guess
         this.updateGameStatus(`Guess ${this.autoGame.currentGuess}: ${optimalGuess} - Preparing next guess...`);
@@ -343,33 +336,6 @@ class PrimelSolverGitHub {
         if (!this.autoGame.isPaused && this.autoGame.isPlaying) {
             this.autoGame.stepTimeout = setTimeout(() => this.playAutoGameStep(), 500);
         }
-    }
-
-    calculateOptimalGuess() {
-        if (this.autoGame.availablePrimes.length <= 1) {
-            return this.autoGame.availablePrimes[0] || this.primeList[0];
-        }
-
-        // For first guess, use known good starting guesses
-        if (this.autoGame.currentGuess === 0) {
-            const startingGuesses = [12953, 15923, 17389];
-            return startingGuesses[Math.floor(Math.random() * startingGuesses.length)];
-        }
-
-        // Calculate entropy for top candidates
-        const candidates = this.autoGame.availablePrimes.slice(0, Math.min(15, this.autoGame.availablePrimes.length));
-        let bestGuess = candidates[0];
-        let bestEntropy = -1;
-
-        for (const candidate of candidates) {
-            const entropy = this.calculateEntropyForGuess(candidate, this.autoGame.availablePrimes);
-            if (entropy > bestEntropy) {
-                bestEntropy = entropy;
-                bestGuess = candidate;
-            }
-        }
-
-        return bestGuess;
     }
 
     calculateFeedback(guess, target) {
@@ -431,21 +397,20 @@ class PrimelSolverGitHub {
     }
 
     displayAutoSuggestions() {
-        const suggestions = this.generateSuggestions(this.autoGame.availablePrimes.length);
+        var suggestions;
+        if (this.autoGame.availablePrimes.length === 8363) {
+            suggestions = [
+                { prime: 12953, entropy: 6.632274, rank: 1 },
+                { prime: 12539, entropy: 6.631809, rank: 2 },
+                { prime: 15923, entropy: 6.629907, rank: 3 },
+                { prime: 12739, entropy: 6.626544, rank: 4 },
+                { prime: 12893, entropy: 6.624787, rank: 5 }
+            ];
+        } else {
+            suggestions = this.generateSuggestions(this.autoGame.availablePrimes.length);
+        }
         this.displaySuggestionsWithAnimation(suggestions, 'suggestionsResults');
-    }
-
-    displayInitialSuggestions() {
-        // Show the best starting guesses with their entropy values
-        const startingGuesses = [
-            { prime: 12953, entropy: 6.234567, rank: 1 },
-            { prime: 15923, entropy: 6.187432, rank: 2 },
-            { prime: 17389, entropy: 6.156789, rank: 3 },
-            { prime: 19427, entropy: 6.123456, rank: 4 },
-            { prime: 23719, entropy: 6.098765, rank: 5 }
-        ];
-
-        this.displaySuggestionsWithAnimation(startingGuesses, 'suggestionsResults');
+        return suggestions.find(s => s.rank === 1)?.prime || null; // Return the top suggestion
     }
 
     endAutoGame(won) {
