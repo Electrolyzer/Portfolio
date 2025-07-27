@@ -18,7 +18,7 @@ For each potential guess, we calculate how it would partition the remaining poss
 H = Σ p(pattern) × log₂(1/p(pattern))
 ```
 
-Where `p(pattern)` is the probability of each possible feedback pattern occurring.
+Where `p(pattern)` is the probability of each possible feedback pattern occurring. This metric maximizes the expected information gain, ensuring that each guess minimizes the remaining uncertainty about the possible answers.
 
 ## Key Features
 
@@ -41,8 +41,8 @@ Where `p(pattern)` is the probability of each possible feedback pattern occurrin
 
 ## Usage
 
-### Web Demo
-Open `primel-solver.html` in a web browser to use the interactive demo.
+### Web Version
+Open [primel solver](https://electrolyzer.github.io/Portfolio/projects/primel-solver/primel-solver.html) in a web browser to use the interactive demo.
 
 ### Command Line
 ```bash
@@ -71,8 +71,8 @@ reduced_list = prime_list_reducer(12953, [0, 1, 2, 1, 2], prime_list)
 ## Performance
 
 - **Prime Database**: 8,363 five-digit primes
-- **Calculation Speed**: Typically 1-2 seconds for entropy calculations
-- **Optimization**: Limited to top 100 candidates for performance in web demo
+- **Cache Optimization**: First set of suggestions is cached, as it is always the same
+- **Calculation Speed**: Further suggestions typically less than a second for entropy calculations
 
 ## Technical Implementation
 

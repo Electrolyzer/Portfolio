@@ -578,6 +578,7 @@ class PrimelSolverGitHub {
 
     // Shared Methods
     generateSuggestions(availablePrimes) {
+        const startTime = performance.now(); // Reset performance timer
         const suggestions = [];
 
         if (availablePrimes.length === 8363) return this.firstSuggestions;
@@ -599,7 +600,8 @@ class PrimelSolverGitHub {
                 rank: i + 1
             });
         }
-
+        const endTime = performance.now(); // End performance timer
+        console.log(`Suggestion generation took ${endTime - startTime} milliseconds`);
         return suggestions;
     }
 
@@ -776,4 +778,15 @@ class PrimelSolverGitHub {
 // Initialize the solver when the page loads
 document.addEventListener('DOMContentLoaded', () => {
     new PrimelSolverGitHub();
+    
+    // Auto-scroll to the interactive demo section
+    setTimeout(() => {
+        const demoSection = document.querySelector('.demo-section');
+        if (demoSection) {
+            demoSection.scrollIntoView({ 
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    }, 500); // Small delay to ensure page is fully loaded
 });
