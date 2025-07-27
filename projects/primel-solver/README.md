@@ -72,7 +72,7 @@ reduced_list = prime_list_reducer(12953, [0, 1, 2, 1, 2], prime_list)
 
 - **Prime Database**: 8,363 five-digit primes
 - **Cache Optimization**: First set of suggestions is cached, as it is always the same
-- **Calculation Speed**: Further suggestions typically less than a second for entropy calculations
+- **Calculation Speed**: Further suggestions typically less than 50 ms
 
 ## Technical Implementation
 
@@ -82,7 +82,7 @@ The solver uses NumPy for efficient numerical computations and implements the sa
 - **Yellow (1)**: Correct digit in wrong position  
 - **Gray (0)**: Digit not in the target number
 
-## Dependencies
+## Dependencies (For command line installation)
 
 - Python 3.8+
 - NumPy

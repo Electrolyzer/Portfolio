@@ -354,11 +354,13 @@ class PrimelSolverGitHub {
         const guessStr = guess.toString().padStart(5, '0');
         const targetStr = target.toString().padStart(5, '0');
         const feedback = [0, 0, 0, 0, 0];
+        const targetUsed = Array(5).fill(false); // Track used positions in target
 
         // Check for correct positions (green)
         for (let i = 0; i < 5; i++) {
             if (guessStr[i] === targetStr[i]) {
                 feedback[i] = 2;
+                targetUsed[i] = true; // Mark as used
             }
         }
 
@@ -366,8 +368,9 @@ class PrimelSolverGitHub {
         for (let i = 0; i < 5; i++) {
             if (feedback[i] === 0) { // Not already green
                 for (let j = 0; j < 5; j++) {
-                    if (i !== j && feedback[j] !== 2 && guessStr[i] === targetStr[j]) {
+                    if (!targetUsed[j] && guessStr[i] === targetStr[j]) {
                         feedback[i] = 1;
+                        targetUsed[j] = true; // Mark as used
                         break;
                     }
                 }
@@ -577,7 +580,7 @@ class PrimelSolverGitHub {
 
     // Shared Methods
     generateSuggestions(availablePrimes) {
-        const startTime = performance.now(); // Reset performance timer
+        // const startTime = performance.now(); // Reset performance timer
         const suggestions = [];
 
         if (availablePrimes.length === 8363) return this.firstSuggestions;
@@ -599,8 +602,8 @@ class PrimelSolverGitHub {
                 rank: i + 1
             });
         }
-        const endTime = performance.now(); // End performance timer
-        console.log(`Suggestion generation took ${endTime - startTime} milliseconds`);
+        // const endTime = performance.now(); // End performance timer
+        // console.log(`Suggestion generation took ${endTime - startTime} milliseconds`);
         return suggestions;
     }
 
