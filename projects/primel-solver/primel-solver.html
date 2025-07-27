@@ -259,7 +259,7 @@
                             Key components include:
                         </p>
                         <ul>
-                            <li>Entropy calculation engine (Python & JavaScript)</li>
+                            <li>Entropy calculation engine</li>
                             <li>Prime list filtering algorithm</li>
                             <li>Feedback pattern generation</li>
                             <li>Interactive web interface</li>
@@ -269,41 +269,64 @@
                 </div>
 
                 <div class="code-section">
-                    <h3>Core Algorithm</h3>
-                    <pre><code>def primel_entropy_calc(prime_guess, prime_list):
-    """
-    Calculates the entropy of a Primel guess
-    
-    Args:
-        prime_guess: 5-digit prime number guess
-        prime_list: list of possible prime numbers
-        
-    Returns:
-        entropy: calculated entropy value
-        probability_bucket: feedback patterns for each prime
-    """
-    
-    # Extract digits from prime guess
-    prime_guess_digits = np.zeros(5, dtype=int)
-    for j in range(5):
-        prime_guess_digits[j] = (prime_guess // (10 ** (4-j))) % 10
-    
-    probability_bucket = np.zeros((len(prime_list), 5), dtype=int)
-    
-    # Calculate feedback patterns for each possible answer
-    for i in range(len(prime_list)):
-        # ... feedback calculation logic ...
-    
-    # Calculate entropy from feedback pattern distribution
-    total_primes = len(prime_list)
-    entropy = 0
-    
-    for count in probability_bucket_histogram.flat:
-        if count > 0:
-            probability = count / total_primes
-            entropy += probability * np.log2(total_primes / count)
-    
-    return entropy, probability_bucket</code></pre>
+                    <h3>Core Algorithm (JavaScript Implementation)</h3>
+                    <pre><code>calculateEntropyForGuess(guess, availablePrimes) {
+    if (availablePrimes.length <= 1) return 0;
+
+    // Group primes by their feedback patterns
+    const patternGroups = {};
+
+    for (const prime of availablePrimes) {
+        const feedback = this.calculateFeedback(guess, prime);
+        const patternKey = feedback.join('');
+
+        if (!patternGroups[patternKey]) {
+            patternGroups[patternKey] = 0;
+        }
+        patternGroups[patternKey]++;
+    }
+
+    // Calculate entropy using information theory
+    let entropy = 0;
+    const total = availablePrimes.length;
+
+    for (const count of Object.values(patternGroups)) {
+        if (count > 0) {
+            const probability = count / total;
+            entropy += probability * Math.log2(total / count);
+        }
+    }
+
+    return entropy;
+}
+
+calculateFeedback(guess, target) {
+    const guessStr = guess.toString().padStart(5, '0');
+    const targetStr = target.toString().padStart(5, '0');
+    const feedback = [0, 0, 0, 0, 0];
+
+    // Check for correct positions (green = 2)
+    for (let i = 0; i < 5; i++) {
+        if (guessStr[i] === targetStr[i]) {
+            feedback[i] = 2;
+        }
+    }
+
+    // Check for correct digits in wrong positions (yellow = 1)
+    for (let i = 0; i < 5; i++) {
+        if (feedback[i] === 0) { // Not already green
+            for (let j = 0; j < 5; j++) {
+                if (i !== j && feedback[j] !== 2 && 
+                    guessStr[i] === targetStr[j]) {
+                    feedback[i] = 1;
+                    break;
+                }
+            }
+        }
+    }
+
+    return feedback; // [0=gray, 1=yellow, 2=green]
+}</code></pre>
                 </div>
             </div>
         </section>

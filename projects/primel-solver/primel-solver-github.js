@@ -12,6 +12,7 @@ class PrimelSolverGitHub {
             { prime: 12739, entropy: 6.626544, rank: 4 },
             { prime: 12893, entropy: 6.624787, rank: 5 }
         ];
+        this.autoStarts = 5; // Number of remaining auto runs before requiring manual start
         this.currentMode = 'auto'; // 'auto' or 'manual'
         this.autoGame = {
             target: null,
@@ -419,9 +420,9 @@ class PrimelSolverGitHub {
         document.getElementById('gameStatus').classList.add(won ? 'won' : 'lost');
         document.getElementById('playPauseBtn').textContent = '▶️ Play';
 
-        this.showMessage(won ? 'Puzzle solved!' : 'Game over!', won ? 'success' : 'error');
+        // this.showMessage(won ? 'Puzzle solved!' : 'Game over!', won ? 'success' : 'error');
 
-        if(!this.autoGame.isPaused) {
+        if(!this.autoGame.isPaused && this.autoStarts-- > 0) {
             this.autoGame.gameTimeout = setTimeout(() => { this.startNewAutoGame(); }, 3000);
         }
     }
