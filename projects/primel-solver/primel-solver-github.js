@@ -21,7 +21,7 @@ class PrimelSolverGitHub {
 
     async loadPrimeList(retryCount = 0) {
         const maxRetries = 3;
-        
+
         try {
             const response = await fetch('primelist.csv', {
                 cache: 'no-cache',
@@ -29,17 +29,17 @@ class PrimelSolverGitHub {
                     'Cache-Control': 'no-cache'
                 }
             });
-            
+
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
-            
+
             const csvText = await response.text();
-            
+
             if (!csvText || csvText.trim().length === 0) {
                 throw new Error('Empty CSV file');
             }
-            
+
             // Parse CSV - assuming it's a simple list of primes, one per line
             this.primeList = csvText
                 .split('\n')
@@ -47,28 +47,28 @@ class PrimelSolverGitHub {
                 .filter(line => line && !isNaN(line) && line.length === 5)
                 .map(line => parseInt(line))
                 .filter(prime => prime >= 10000 && prime <= 99999);
-            
+
             if (this.primeList.length === 0) {
                 throw new Error('No valid primes found in CSV');
             }
-            
+
             this.remainingPrimes = this.primeList.length;
             this.showMessage(`Loaded ${this.primeList.length} primes from database`, 'success');
-            
+
             // Initialize the game after loading primes
             this.initializeGame();
-            
+
         } catch (error) {
             console.error(`Error loading prime list (attempt ${retryCount + 1}):`, error);
-            
+
             if (retryCount < maxRetries) {
                 this.showMessage(`Retrying prime database load... (${retryCount + 1}/${maxRetries})`, 'info');
                 setTimeout(() => this.loadPrimeList(retryCount + 1), 1000);
                 return;
             }
-            
+
             this.showMessage('Using fallback prime list - CSV load failed', 'error');
-            
+
             // Fallback to smaller list if CSV fails to load
             this.primeList = [
                 10007, 10009, 10037, 10039, 10061, 10067, 10069, 10079, 10091, 10093,
@@ -156,8 +156,8 @@ class PrimelSolverGitHub {
         this.createGameBoard();
         this.switchMode('auto');
         this.updateAutoGameStats(8363, 0, null);
-        this.showMessage('Demo initialized - Starting auto demo...', 'info');
-        
+        // this.showMessage('Demo initialized - Starting auto demo...', 'info');
+
         // Auto-start the first demo
         setTimeout(() => {
             this.startNewAutoGame();
@@ -166,15 +166,15 @@ class PrimelSolverGitHub {
 
     switchMode(mode) {
         this.currentMode = mode;
-        
+
         // Update button states
         document.getElementById('autoDemoBtn').classList.toggle('active', mode === 'auto');
         document.getElementById('manualModeBtn').classList.toggle('active', mode === 'manual');
-        
+
         // Show/hide mode sections
         document.getElementById('autoDemoMode').classList.toggle('active', mode === 'auto');
         document.getElementById('manualMode').classList.toggle('active', mode === 'manual');
-        
+
         if (mode === 'manual') {
             this.updateManualGameStats(this.remainingPrimes, this.gameHistory.length);
         }
@@ -183,19 +183,19 @@ class PrimelSolverGitHub {
     createGameBoard() {
         const gameBoard = document.getElementById('gameBoard');
         gameBoard.innerHTML = '';
-        
+
         for (let row = 0; row < 6; row++) {
             const guessRow = document.createElement('div');
             guessRow.className = 'guess-row';
             guessRow.id = `row-${row}`;
-            
+
             for (let col = 0; col < 5; col++) {
                 const cell = document.createElement('div');
                 cell.className = 'game-cell';
                 cell.id = `cell-${row}-${col}`;
                 guessRow.appendChild(cell);
             }
-            
+
             gameBoard.appendChild(guessRow);
         }
     }
@@ -207,11 +207,11 @@ class PrimelSolverGitHub {
             setTimeout(() => this.startNewAutoGame(), 1000);
             return;
         }
-        
+
         // Get target prime
         const targetInput = document.getElementById('targetPrime');
         let target = targetInput.value.trim();
-        
+
         if (!target) {
             // Random prime
             target = this.primeList[Math.floor(Math.random() * this.primeList.length)];
@@ -239,21 +239,21 @@ class PrimelSolverGitHub {
         this.createGameBoard();
         this.updateGameStatus('Game started! Calculating first guess...');
         this.updateAutoGameStats(this.autoGame.availablePrimes ? this.autoGame.availablePrimes.length : 0, 0, target);
-        
+
         // Show initial suggestions before any guess is made
         this.displayInitialSuggestions();
-        
+
         // Update controls
         document.getElementById('playPauseBtn').textContent = '⏸️ Pause';
         document.getElementById('newGameBtn').textContent = 'New Game';
-        
+
         // Start the game loop
         setTimeout(() => this.playAutoGameStep(), 1000);
     }
 
     async playAutoGameStep() {
         if (!this.autoGame.isPlaying || this.autoGame.isPaused) return;
-        
+
         if (this.autoGame.currentGuess >= 6) {
             this.endAutoGame(false);
             return;
@@ -261,41 +261,41 @@ class PrimelSolverGitHub {
 
         // Calculate optimal guess
         this.updateGameStatus('Calculating optimal guess...');
-        this.showAutoLoadingSpinner(true);
-        
+        // this.showAutoLoadingSpinner(true);
+
         // Simulate calculation delay
         await this.delay(this.getSpeedDelay());
-        
+
         const optimalGuess = this.calculateOptimalGuess();
         const feedback = this.calculateFeedback(optimalGuess, this.autoGame.target);
-        
+
         // Display the guess on the board
         this.displayGuessOnBoard(this.autoGame.currentGuess, optimalGuess, feedback);
-        
+
         // Update game state
         this.autoGame.gameBoard.push({ guess: optimalGuess, feedback });
         this.autoGame.currentGuess++;
-        
+
         // Filter available primes based on feedback
         this.autoGame.availablePrimes = this.filterPrimes(this.autoGame.availablePrimes, optimalGuess, feedback);
-        
+
         // Update stats
         this.updateAutoGameStats(this.autoGame.availablePrimes.length, this.autoGame.currentGuess, this.autoGame.target);
-        
+
         // Check if won
         if (feedback.every(f => f === 2)) {
             this.endAutoGame(true);
-            this.showAutoLoadingSpinner(false);
+            // this.showAutoLoadingSpinner(false);
             return;
         }
-        
+
         // Generate and display suggestions for next guess (only if game continues)
         this.displayAutoSuggestions();
-        this.showAutoLoadingSpinner(false);
-        
+        // this.showAutoLoadingSpinner(false);
+
         // Continue to next guess
         this.updateGameStatus(`Guess ${this.autoGame.currentGuess}: ${optimalGuess} - Preparing next guess...`);
-        
+
         if (this.autoGame.isPlaying && !this.autoGame.isPaused) {
             setTimeout(() => this.playAutoGameStep(), this.getSpeedDelay() * 2);
         }
@@ -306,13 +306,13 @@ class PrimelSolverGitHub {
             this.showMessage('Start a new game first', 'error');
             return;
         }
-        
+
         // If game is running, pause it first
         if (this.autoGame.isPlaying && !this.autoGame.isPaused) {
             this.autoGame.isPaused = true;
             document.getElementById('playPauseBtn').textContent = '▶️ Play';
         }
-        
+
         // Execute one step
         if (this.autoGame.isPlaying) {
             this.playAutoGameStep();
@@ -324,10 +324,10 @@ class PrimelSolverGitHub {
             this.showMessage('Start a new game first', 'error');
             return;
         }
-        
+
         this.autoGame.isPaused = !this.autoGame.isPaused;
         document.getElementById('playPauseBtn').textContent = this.autoGame.isPaused ? '▶️ Play' : '⏸️ Pause';
-        
+
         if (!this.autoGame.isPaused && this.autoGame.isPlaying) {
             setTimeout(() => this.playAutoGameStep(), 500);
         }
@@ -337,18 +337,18 @@ class PrimelSolverGitHub {
         if (this.autoGame.availablePrimes.length <= 1) {
             return this.autoGame.availablePrimes[0] || this.primeList[0];
         }
-        
+
         // For first guess, use known good starting guesses
         if (this.autoGame.currentGuess === 0) {
             const startingGuesses = [12953, 15923, 17389];
             return startingGuesses[Math.floor(Math.random() * startingGuesses.length)];
         }
-        
+
         // Calculate entropy for top candidates
         const candidates = this.autoGame.availablePrimes.slice(0, Math.min(15, this.autoGame.availablePrimes.length));
         let bestGuess = candidates[0];
         let bestEntropy = -1;
-        
+
         for (const candidate of candidates) {
             const entropy = this.calculateEntropyForGuess(candidate, this.autoGame.availablePrimes);
             if (entropy > bestEntropy) {
@@ -356,7 +356,7 @@ class PrimelSolverGitHub {
                 bestGuess = candidate;
             }
         }
-        
+
         return bestGuess;
     }
 
@@ -364,14 +364,14 @@ class PrimelSolverGitHub {
         const guessStr = guess.toString().padStart(5, '0');
         const targetStr = target.toString().padStart(5, '0');
         const feedback = [0, 0, 0, 0, 0];
-        
+
         // Check for correct positions (green)
         for (let i = 0; i < 5; i++) {
             if (guessStr[i] === targetStr[i]) {
                 feedback[i] = 2;
             }
         }
-        
+
         // Check for correct digits in wrong positions (yellow)
         for (let i = 0; i < 5; i++) {
             if (feedback[i] === 0) { // Not already green
@@ -383,7 +383,7 @@ class PrimelSolverGitHub {
                 }
             }
         }
-        
+
         return feedback;
     }
 
@@ -396,12 +396,12 @@ class PrimelSolverGitHub {
 
     displayGuessOnBoard(row, guess, feedback) {
         const guessStr = guess.toString().padStart(5, '0');
-        
+
         for (let col = 0; col < 5; col++) {
             const cell = document.getElementById(`cell-${row}-${col}`);
             cell.textContent = guessStr[col];
             cell.classList.add('filled');
-            
+
             // Add feedback styling with animation
             setTimeout(() => {
                 cell.classList.add('cell-flip');
@@ -422,7 +422,7 @@ class PrimelSolverGitHub {
         const suggestions = this.generateMockSuggestions(this.autoGame.availablePrimes.length);
         this.displaySuggestionsWithAnimation(suggestions, 'suggestionsResults');
     }
-    
+
     displayInitialSuggestions() {
         // Show the best starting guesses with their entropy values
         const startingGuesses = [
@@ -432,30 +432,30 @@ class PrimelSolverGitHub {
             { prime: 19427, entropy: 6.123456, rank: 4 },
             { prime: 23719, entropy: 6.098765, rank: 5 }
         ];
-        
+
         this.displaySuggestions(startingGuesses, 'suggestionsResults');
     }
 
     endAutoGame(won) {
         this.autoGame.isPlaying = false;
         this.autoGame.isPaused = false;
-        
-        const status = won ? 
+
+        const status = won ?
             `🎉 Solved in ${this.autoGame.currentGuess} guesses! Target was ${this.autoGame.target}` :
             `😞 Game over! Target was ${this.autoGame.target}`;
-        
+
         this.updateGameStatus(status);
         document.getElementById('gameStatus').classList.add(won ? 'won' : 'lost');
         document.getElementById('playPauseBtn').textContent = '▶️ Play';
-        
+
         this.showMessage(won ? 'Puzzle solved!' : 'Game over!', won ? 'success' : 'error');
     }
 
     getSpeedDelay() {
         switch (this.autoGame.speed) {
-            case 'slow': return 3000;
-            case 'fast': return 800;
-            default: return 1500; // normal
+            case 'slow': return 1200;
+            case 'fast': return 400;
+            default: return 800; // normal
         }
     }
 
@@ -475,15 +475,15 @@ class PrimelSolverGitHub {
         document.getElementById('targetDisplay').textContent = target || 'Hidden';
     }
 
-    showAutoLoadingSpinner(show) {
-        document.getElementById('loadingSpinner').style.display = show ? 'block' : 'none';
-    }
+    // showAutoLoadingSpinner(show) {
+    //     document.getElementById('loadingSpinner').style.display = show ? 'block' : 'none';
+    // }
 
     // Manual Mode Methods
     addManualGuess() {
         const guessInput = document.getElementById('guessInput');
         const feedbackInput = document.getElementById('feedbackInput');
-        
+
         const guess = guessInput.value.trim();
         const feedback = feedbackInput.value.trim();
 
@@ -540,31 +540,31 @@ class PrimelSolverGitHub {
 
     updateManualGuessHistory() {
         const historyContainer = document.getElementById('guessHistory');
-        
+
         if (this.gameHistory.length === 0) {
             historyContainer.innerHTML = '<p style="text-align: center; color: #6b7280; font-style: italic;">No guesses yet. Add your first guess above.</p>';
             return;
         }
 
         historyContainer.innerHTML = '';
-        
+
         this.gameHistory.forEach((entry, index) => {
             const guessEntry = document.createElement('div');
             guessEntry.className = 'guess-entry';
-            
+
             const guessNumber = document.createElement('span');
             guessNumber.className = 'guess-number';
             guessNumber.textContent = `${index + 1}.`;
-            
+
             const guessDigits = document.createElement('div');
             guessDigits.className = 'guess-digits';
-            
+
             const guessStr = entry.guess.toString().padStart(5, '0');
             for (let i = 0; i < 5; i++) {
                 const digit = document.createElement('div');
                 digit.className = 'guess-digit';
                 digit.textContent = guessStr[i];
-                
+
                 if (entry.feedback[i] === 2) {
                     digit.classList.add('correct');
                 } else if (entry.feedback[i] === 1) {
@@ -572,10 +572,10 @@ class PrimelSolverGitHub {
                 } else {
                     digit.classList.add('incorrect');
                 }
-                
+
                 guessDigits.appendChild(digit);
             }
-            
+
             const removeBtn = document.createElement('button');
             removeBtn.className = 'remove-guess';
             removeBtn.innerHTML = '×';
@@ -583,11 +583,11 @@ class PrimelSolverGitHub {
             removeBtn.addEventListener('click', () => {
                 this.showMessage('To remove a guess, please clear all history and re-enter your guesses', 'info');
             });
-            
+
             guessEntry.appendChild(guessNumber);
             guessEntry.appendChild(guessDigits);
             guessEntry.appendChild(removeBtn);
-            
+
             historyContainer.appendChild(guessEntry);
         });
     }
@@ -612,7 +612,7 @@ class PrimelSolverGitHub {
     generateMockSuggestions(remainingCount = null) {
         const suggestions = [];
         let availablePrimes;
-        
+
         // Use actual available primes based on current mode
         if (this.currentMode === 'auto' && this.autoGame.availablePrimes) {
             availablePrimes = this.autoGame.availablePrimes;
@@ -620,19 +620,19 @@ class PrimelSolverGitHub {
             // For manual mode, simulate filtering based on game history
             availablePrimes = this.filterPrimesFromHistory();
         }
-        
+
         // Calculate entropy for top candidates
         const candidates = availablePrimes.slice(0, Math.min(20, availablePrimes.length));
         const entropyResults = [];
-        
+
         for (const prime of candidates) {
             const entropy = this.calculateEntropyForGuess(prime, availablePrimes);
             entropyResults.push({ prime, entropy });
         }
-        
+
         // Sort by entropy (highest first) and take top 5
         entropyResults.sort((a, b) => b.entropy - a.entropy);
-        
+
         for (let i = 0; i < Math.min(5, entropyResults.length); i++) {
             suggestions.push({
                 prime: entropyResults[i].prime,
@@ -640,93 +640,93 @@ class PrimelSolverGitHub {
                 rank: i + 1
             });
         }
-        
+
         return suggestions;
     }
-    
+
     filterPrimesFromHistory() {
         let filtered = [...this.primeList];
-        
+
         // Apply each guess from history to filter the list
         for (const entry of this.gameHistory) {
             filtered = this.filterPrimes(filtered, entry.guess, entry.feedback);
         }
-        
+
         return filtered;
     }
-    
+
     calculateEntropyForGuess(guess, availablePrimes) {
         if (availablePrimes.length <= 1) return 0;
-        
+
         // Group primes by their feedback patterns
         const patternGroups = {};
-        
+
         for (const prime of availablePrimes) {
             const feedback = this.calculateFeedback(guess, prime);
             const patternKey = feedback.join('');
-            
+
             if (!patternGroups[patternKey]) {
                 patternGroups[patternKey] = 0;
             }
             patternGroups[patternKey]++;
         }
-        
+
         // Calculate entropy
         let entropy = 0;
         const total = availablePrimes.length;
-        
+
         for (const count of Object.values(patternGroups)) {
             if (count > 0) {
                 const probability = count / total;
                 entropy += probability * Math.log2(total / count);
             }
         }
-        
+
         return entropy;
     }
 
     displaySuggestions(suggestions, containerId) {
         const suggestionsResults = document.getElementById(containerId);
-        
+
         if (!suggestions || suggestions.length === 0) {
             suggestionsResults.innerHTML = '<p class="no-results">No suggestions available</p>';
             return;
         }
 
         suggestionsResults.innerHTML = '';
-        
+
         suggestions.forEach(suggestion => {
             const suggestionItem = document.createElement('div');
             suggestionItem.className = 'suggestion-item';
-            
+
             const rank = document.createElement('div');
             rank.className = 'suggestion-rank';
             rank.textContent = suggestion.rank;
-            
+
             const details = document.createElement('div');
             details.style.flex = '1';
-            
+
             const prime = document.createElement('div');
             prime.className = 'suggestion-prime';
             prime.textContent = suggestion.prime;
-            
+
             const entropy = document.createElement('div');
             entropy.className = 'suggestion-entropy';
             entropy.textContent = `Entropy: ${suggestion.entropy}`;
-            
+
             details.appendChild(prime);
             details.appendChild(entropy);
-            
+
             suggestionItem.appendChild(rank);
             suggestionItem.appendChild(details);
-            
+
             suggestionsResults.appendChild(suggestionItem);
         });
     }
-    
+
     displaySuggestionsWithAnimation(suggestions, containerId) {
         const suggestionsResults = document.getElementById(containerId);
-        
+
         if (!suggestions || suggestions.length === 0) {
             suggestionsResults.innerHTML = '<p class="no-results">No suggestions available</p>';
             return;
@@ -734,34 +734,34 @@ class PrimelSolverGitHub {
 
         // Clear existing suggestions
         suggestionsResults.innerHTML = '';
-        
+
         // Add suggestions with staggered animation
         suggestions.forEach((suggestion, index) => {
             const suggestionItem = document.createElement('div');
             suggestionItem.className = 'suggestion-item suggestion-animate';
             suggestionItem.style.animationDelay = `${index * 100}ms`;
-            
+
             const rank = document.createElement('div');
             rank.className = 'suggestion-rank';
             rank.textContent = suggestion.rank;
-            
+
             const details = document.createElement('div');
             details.style.flex = '1';
-            
+
             const prime = document.createElement('div');
             prime.className = 'suggestion-prime';
             prime.textContent = suggestion.prime;
-            
+
             const entropy = document.createElement('div');
             entropy.className = 'suggestion-entropy';
             entropy.textContent = `Entropy: ${suggestion.entropy}`;
-            
+
             details.appendChild(prime);
             details.appendChild(entropy);
-            
+
             suggestionItem.appendChild(rank);
             suggestionItem.appendChild(details);
-            
+
             suggestionsResults.appendChild(suggestionItem);
         });
     }
@@ -769,7 +769,7 @@ class PrimelSolverGitHub {
     getReductionFactor(feedback) {
         const greenCount = feedback.split('').filter(f => f === '2').length;
         const yellowCount = feedback.split('').filter(f => f === '1').length;
-        
+
         if (greenCount === 5) return 0.0001;
         if (greenCount >= 3) return 0.1;
         if (greenCount >= 1) return 0.3;
