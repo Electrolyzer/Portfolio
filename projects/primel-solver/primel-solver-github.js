@@ -158,7 +158,6 @@ class PrimelSolverGitHub {
         this.createGameBoard();
         this.switchMode('auto');
         this.updateAutoGameStats(8363, 0, null);
-        // this.showMessage('Demo initialized - Starting auto demo...', 'info');
 
         // Auto-start the first demo
         setTimeout(() => {
@@ -261,7 +260,7 @@ class PrimelSolverGitHub {
     }
 
     async playAutoGameStep() {
-        if (!this.autoGame.isPlaying || this.autoGame.isPaused) return;
+        if (!this.autoGame.isPlaying) return;
 
         if (this.autoGame.currentGuess >= 6) {
             this.endAutoGame(false);
@@ -294,7 +293,6 @@ class PrimelSolverGitHub {
         // Check if won
         if (feedback.every(f => f === 2)) {
             this.endAutoGame(true);
-            // this.showAutoLoadingSpinner(false);
             return;
         }
 
@@ -307,14 +305,15 @@ class PrimelSolverGitHub {
     }
 
     stepAutoGame() {
-        if (!this.autoGame.target) {
+        if (!this.autoGame.target || !this.autoGame.isPlaying) {
             this.showMessage('Start a new game first', 'error');
             return;
         }
 
         // If game is running, pause it first
-        if (this.autoGame.isPlaying && !this.autoGame.isPaused) {
+        if (!this.autoGame.isPaused) {
             this.autoGame.isPaused = true;
+            clearTimeout(this.autoGame.stepTimeout);
             document.getElementById('playPauseBtn').textContent = '▶️ Play';
         }
 
@@ -452,10 +451,6 @@ class PrimelSolverGitHub {
         document.getElementById('targetDisplay').textContent = target || 'Hidden';
     }
 
-    // showAutoLoadingSpinner(show) {
-    //     document.getElementById('loadingSpinner').style.display = show ? 'block' : 'none';
-    // }
-
     // Manual Mode Methods
     addManualGuess() {
         const guessInput = document.getElementById('guessInput');
@@ -491,17 +486,14 @@ class PrimelSolverGitHub {
     }
 
     getManualSuggestions() {
-        const loadingSpinner = document.getElementById('manualLoadingSpinner');
         const suggestionsResults = document.getElementById('manualSuggestionsResults');
 
-        loadingSpinner.style.display = 'block';
         suggestionsResults.innerHTML = '';
 
         setTimeout(() => {
             const suggestions = this.generateSuggestions(this.remainingPrimes);
             this.displaySuggestions(suggestions, 'manualSuggestionsResults');
             this.showMessage('Suggestions generated (demo version)', 'success');
-            loadingSpinner.style.display = 'none';
         }, 1500);
     }
 
