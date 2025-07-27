@@ -3,8 +3,6 @@
 
 class PrimelSolverGitHub {
     constructor() {
-        this.gameHistory = [];
-        this.remainingPrimes = 0;
         this.firstSuggestions = [
             { prime: 12953, entropy: 6.632274, rank: 1 },
             { prime: 12539, entropy: 6.631809, rank: 2 },
@@ -21,8 +19,13 @@ class PrimelSolverGitHub {
             isPaused: false,
             speed: 'normal',
             gameBoard: [],
+            availablePrimes: [],
             gameTimeout: null,
             stepTimeout: null
+        };
+        this.manualGame = {
+            gameHistory: [],
+            remainingPrimes: []
         };
         this.primeList = [];
         this.initializeEventListeners();
@@ -62,7 +65,8 @@ class PrimelSolverGitHub {
                 throw new Error('No valid primes found in CSV');
             }
 
-            this.remainingPrimes = this.primeList.length;
+            // Initialize manual game with full prime list
+            this.manualGame.remainingPrimes = [...this.primeList];
             this.showMessage(`Loaded ${this.primeList.length} primes from database`, 'success');
 
             // Initialize the game after loading primes
@@ -90,7 +94,7 @@ class PrimelSolverGitHub {
                 47293, 53197, 59393, 61291, 67297, 71293, 73297, 79193, 83297, 89197,
                 91199, 97291, 98317, 99991
             ];
-            this.remainingPrimes = this.primeList.length;
+            this.manualGame.remainingPrimes = [...this.primeList];
             this.initializeGame();
         }
     }
@@ -131,10 +135,6 @@ class PrimelSolverGitHub {
             this.addManualGuess();
         });
 
-        document.getElementById('getSuggestionsBtn').addEventListener('click', () => {
-            this.getManualSuggestions();
-        });
-
         document.getElementById('clearHistoryBtn').addEventListener('click', () => {
             this.clearManualHistory();
         });
@@ -164,13 +164,14 @@ class PrimelSolverGitHub {
 
     initializeGame() {
         this.createGameBoard();
-        this.switchMode('auto');
         this.updateAutoGameStats(this.primeList.length, 0, null);
+
+        this.switchMode(this.currentMode);
 
         // Auto-start the first demo
         setTimeout(() => {
             this.startNewAutoGame();
-        }, 2000);
+        }, 1000);
     }
 
     switchMode(mode) {
@@ -185,7 +186,10 @@ class PrimelSolverGitHub {
         document.getElementById('manualMode').classList.toggle('active', mode === 'manual');
 
         if (mode === 'manual') {
-            this.updateManualGameStats(this.remainingPrimes, this.gameHistory.length);
+            this.updateManualGameStats(this.manualGame.remainingPrimes.length, this.manualGame.gameHistory.length);
+
+            const suggestions = this.generateSuggestions(this.manualGame.remainingPrimes);
+            this.displaySuggestionsWithAnimation(suggestions, 'manualSuggestionsResults');
         }
     }
 
@@ -210,6 +214,7 @@ class PrimelSolverGitHub {
     }
 
     startNewAutoGame() {
+        if (this.currentMode !== 'auto') { return; }
         // Clear any existing timeouts to prevent multiple games running
         if (this.autoGame.gameTimeout) {
             clearTimeout(this.autoGame.gameTimeout);
@@ -422,7 +427,7 @@ class PrimelSolverGitHub {
 
         // this.showMessage(won ? 'Puzzle solved!' : 'Game over!', won ? 'success' : 'error');
 
-        if(!this.autoGame.isPaused && this.autoStarts-- > 0) {
+        if (!this.autoGame.isPaused && this.autoStarts-- > 0) {
             this.autoGame.gameTimeout = setTimeout(() => { this.startNewAutoGame(); }, 3000);
         }
     }
@@ -445,8 +450,8 @@ class PrimelSolverGitHub {
         statusEl.className = 'game-status'; // Reset classes
     }
 
-    updateAutoGameStats(remainingPrimes, guessesMade, target) {
-        document.getElementById('remainingPrimes').textContent = remainingPrimes.toLocaleString();
+    updateAutoGameStats(numRemaining, guessesMade, target) {
+        document.getElementById('remainingPrimes').textContent = numRemaining.toLocaleString();
         document.getElementById('guessesMade').textContent = guessesMade;
         document.getElementById('targetDisplay').textContent = target || 'Hidden';
     }
@@ -469,55 +474,48 @@ class PrimelSolverGitHub {
             return;
         }
 
-        this.gameHistory.push({
+        this.manualGame.gameHistory.push({
             guess: parseInt(guess),
             feedback: feedback.split('').map(Number)
         });
 
         // Calculate actual remaining primes based on filtering
-        const filteredPrimes = this.filterPrimesFromHistory();
-        this.remainingPrimes = filteredPrimes.length;
+        this.manualGame.remainingPrimes = this.filterPrimes(this.manualGame.remainingPrimes, parseInt(guess), feedback.split('').map(Number));
 
         this.updateManualGuessHistory();
-        this.updateManualGameStats(this.remainingPrimes, this.gameHistory.length);
+        this.updateManualGameStats(this.manualGame.remainingPrimes.length, this.manualGame.gameHistory.length);
         this.clearManualInputs();
         this.showMessage('Guess added successfully', 'success');
         this.clearManualSuggestions();
-    }
 
-    getManualSuggestions() {
-        const suggestionsResults = document.getElementById('manualSuggestionsResults');
-
-        suggestionsResults.innerHTML = '';
-
-        setTimeout(() => {
-            const suggestions = this.generateSuggestions(this.remainingPrimes);
-            this.displaySuggestions(suggestions, 'manualSuggestionsResults');
-            this.showMessage('Suggestions generated (demo version)', 'success');
-        }, 1500);
+        const suggestions = this.generateSuggestions(this.manualGame.remainingPrimes);
+        this.displaySuggestionsWithAnimation(suggestions, 'manualSuggestionsResults');
     }
 
     clearManualHistory() {
-        this.gameHistory = [];
-        this.remainingPrimes = this.primeList.length;
+        this.manualGame.gameHistory = [];
+        this.manualGame.remainingPrimes = [...this.primeList];
         this.updateManualGuessHistory();
-        this.updateManualGameStats(this.remainingPrimes, 0);
+        this.updateManualGameStats(this.manualGame.remainingPrimes.length, 0);
         this.clearManualSuggestions();
         this.clearManualInputs();
         this.showMessage('Game history cleared', 'success');
+
+        const suggestions = this.generateSuggestions(this.manualGame.remainingPrimes);
+        this.displaySuggestionsWithAnimation(suggestions, 'manualSuggestionsResults');
     }
 
     updateManualGuessHistory() {
         const historyContainer = document.getElementById('guessHistory');
 
-        if (this.gameHistory.length === 0) {
+        if (this.manualGame.gameHistory.length === 0) {
             historyContainer.innerHTML = '<p style="text-align: center; color: #6b7280; font-style: italic;">No guesses yet. Add your first guess above.</p>';
             return;
         }
 
         historyContainer.innerHTML = '';
 
-        this.gameHistory.forEach((entry, index) => {
+        this.manualGame.gameHistory.forEach((entry, index) => {
             const guessEntry = document.createElement('div');
             guessEntry.className = 'guess-entry';
 
@@ -561,8 +559,8 @@ class PrimelSolverGitHub {
         });
     }
 
-    updateManualGameStats(remainingPrimes, guessesMade) {
-        document.getElementById('manualRemainingPrimes').textContent = remainingPrimes.toLocaleString();
+    updateManualGameStats(numRemaining, guessesMade) {
+        document.getElementById('manualRemainingPrimes').textContent = numRemaining.toLocaleString();
         document.getElementById('manualGuessesMade').textContent = guessesMade;
     }
 
@@ -606,17 +604,6 @@ class PrimelSolverGitHub {
         return suggestions;
     }
 
-    filterPrimesFromHistory() {
-        let filtered = [...this.primeList];
-
-        // Apply each guess from history to filter the list
-        for (const entry of this.gameHistory) {
-            filtered = this.filterPrimes(filtered, entry.guess, entry.feedback);
-        }
-
-        return filtered;
-    }
-
     calculateEntropyForGuess(guess, availablePrimes) {
         if (availablePrimes.length <= 1) return 0;
 
@@ -647,44 +634,44 @@ class PrimelSolverGitHub {
         return entropy;
     }
 
-    displaySuggestions(suggestions, containerId) {
-        const suggestionsResults = document.getElementById(containerId);
+    // displaySuggestions(suggestions, containerId) {
+    //     const suggestionsResults = document.getElementById(containerId);
 
-        if (!suggestions || suggestions.length === 0) {
-            suggestionsResults.innerHTML = '<p class="no-results">No suggestions available</p>';
-            return;
-        }
+    //     if (!suggestions || suggestions.length === 0) {
+    //         suggestionsResults.innerHTML = '<p class="no-results">No suggestions available</p>';
+    //         return;
+    //     }
 
-        suggestionsResults.innerHTML = '';
+    //     suggestionsResults.innerHTML = '';
 
-        suggestions.forEach(suggestion => {
-            const suggestionItem = document.createElement('div');
-            suggestionItem.className = 'suggestion-item';
+    //     suggestions.forEach(suggestion => {
+    //         const suggestionItem = document.createElement('div');
+    //         suggestionItem.className = 'suggestion-item';
 
-            const rank = document.createElement('div');
-            rank.className = 'suggestion-rank';
-            rank.textContent = suggestion.rank;
+    //         const rank = document.createElement('div');
+    //         rank.className = 'suggestion-rank';
+    //         rank.textContent = suggestion.rank;
 
-            const details = document.createElement('div');
-            details.style.flex = '1';
+    //         const details = document.createElement('div');
+    //         details.style.flex = '1';
 
-            const prime = document.createElement('div');
-            prime.className = 'suggestion-prime';
-            prime.textContent = suggestion.prime;
+    //         const prime = document.createElement('div');
+    //         prime.className = 'suggestion-prime';
+    //         prime.textContent = suggestion.prime;
 
-            const entropy = document.createElement('div');
-            entropy.className = 'suggestion-entropy';
-            entropy.textContent = `Entropy: ${suggestion.entropy}`;
+    //         const entropy = document.createElement('div');
+    //         entropy.className = 'suggestion-entropy';
+    //         entropy.textContent = `Entropy: ${suggestion.entropy}`;
 
-            details.appendChild(prime);
-            details.appendChild(entropy);
+    //         details.appendChild(prime);
+    //         details.appendChild(entropy);
 
-            suggestionItem.appendChild(rank);
-            suggestionItem.appendChild(details);
+    //         suggestionItem.appendChild(rank);
+    //         suggestionItem.appendChild(details);
 
-            suggestionsResults.appendChild(suggestionItem);
-        });
-    }
+    //         suggestionsResults.appendChild(suggestionItem);
+    //     });
+    // }
 
     displaySuggestionsWithAnimation(suggestions, containerId) {
         const suggestionsResults = document.getElementById(containerId);
@@ -779,12 +766,12 @@ class PrimelSolverGitHub {
 // Initialize the solver when the page loads
 document.addEventListener('DOMContentLoaded', () => {
     new PrimelSolverGitHub();
-    
+
     // Auto-scroll to the interactive demo section
     setTimeout(() => {
         const demoSection = document.querySelector('.demo-section');
         if (demoSection) {
-            demoSection.scrollIntoView({ 
+            demoSection.scrollIntoView({
                 behavior: 'smooth',
                 block: 'start'
             });
