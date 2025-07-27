@@ -4,7 +4,14 @@
 class PrimelSolverGitHub {
     constructor() {
         this.gameHistory = [];
-        this.remainingPrimes = 8363;
+        this.remainingPrimes = 0;
+        this.firstSuggestions = [
+            { prime: 12953, entropy: 6.632274, rank: 1 },
+            { prime: 12539, entropy: 6.631809, rank: 2 },
+            { prime: 15923, entropy: 6.629907, rank: 3 },
+            { prime: 12739, entropy: 6.626544, rank: 4 },
+            { prime: 12893, entropy: 6.624787, rank: 5 }
+        ];
         this.currentMode = 'auto'; // 'auto' or 'manual'
         this.autoGame = {
             target: null,
@@ -157,7 +164,7 @@ class PrimelSolverGitHub {
     initializeGame() {
         this.createGameBoard();
         this.switchMode('auto');
-        this.updateAutoGameStats(8363, 0, null);
+        this.updateAutoGameStats(this.primeList.length, 0, null);
 
         // Auto-start the first demo
         setTimeout(() => {
@@ -396,25 +403,13 @@ class PrimelSolverGitHub {
     }
 
     displayAutoSuggestions() {
-        var suggestions;
-        if (this.autoGame.availablePrimes.length === 8363) {
-            suggestions = [
-                { prime: 12953, entropy: 6.632274, rank: 1 },
-                { prime: 12539, entropy: 6.631809, rank: 2 },
-                { prime: 15923, entropy: 6.629907, rank: 3 },
-                { prime: 12739, entropy: 6.626544, rank: 4 },
-                { prime: 12893, entropy: 6.624787, rank: 5 }
-            ];
-        } else {
-            suggestions = this.generateSuggestions(this.autoGame.availablePrimes.length);
-        }
+        var suggestions = this.generateSuggestions(this.autoGame.availablePrimes);
         this.displaySuggestionsWithAnimation(suggestions, 'suggestionsResults');
         return suggestions.find(s => s.rank === 1)?.prime || null; // Return the top suggestion
     }
 
     endAutoGame(won) {
         this.autoGame.isPlaying = false;
-        this.autoGame.isPaused = false;
 
         const status = won ?
             `🎉 Solved in ${this.autoGame.currentGuess} guesses! Target was ${this.autoGame.target}` :
@@ -425,6 +420,10 @@ class PrimelSolverGitHub {
         document.getElementById('playPauseBtn').textContent = '▶️ Play';
 
         this.showMessage(won ? 'Puzzle solved!' : 'Game over!', won ? 'success' : 'error');
+
+        if(!this.autoGame.isPaused) {
+            this.autoGame.gameTimeout = setTimeout(() => { this.startNewAutoGame(); }, 3000);
+        }
     }
 
     getSpeedDelay() {
@@ -499,7 +498,7 @@ class PrimelSolverGitHub {
 
     clearManualHistory() {
         this.gameHistory = [];
-        this.remainingPrimes = 8363;
+        this.remainingPrimes = this.primeList.length;
         this.updateManualGuessHistory();
         this.updateManualGameStats(this.remainingPrimes, 0);
         this.clearManualSuggestions();
@@ -578,17 +577,10 @@ class PrimelSolverGitHub {
     }
 
     // Shared Methods
-    generateSuggestions(remainingCount = null) {
+    generateSuggestions(availablePrimes) {
         const suggestions = [];
-        let availablePrimes;
 
-        // Use actual available primes based on current mode
-        if (this.currentMode === 'auto' && this.autoGame.availablePrimes) {
-            availablePrimes = this.autoGame.availablePrimes;
-        } else {
-            // For manual mode, simulate filtering based on game history
-            availablePrimes = this.filterPrimesFromHistory();
-        }
+        if (availablePrimes.length === 8363) return this.firstSuggestions;
 
         // Check the entropy of each prime
         const entropyResults = [];
@@ -731,17 +723,6 @@ class PrimelSolverGitHub {
 
             suggestionsResults.appendChild(suggestionItem);
         });
-    }
-
-    getReductionFactor(feedback) {
-        const greenCount = feedback.split('').filter(f => f === '2').length;
-        const yellowCount = feedback.split('').filter(f => f === '1').length;
-
-        if (greenCount === 5) return 0.0001;
-        if (greenCount >= 3) return 0.1;
-        if (greenCount >= 1) return 0.3;
-        if (yellowCount >= 3) return 0.4;
-        return 0.6;
     }
 
     validateGuess(guess) {

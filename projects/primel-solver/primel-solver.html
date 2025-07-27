@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,11 +9,14 @@
     <link rel="stylesheet" href="primel-solver.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-logo">
-                <a href="../../index.html"><h2>Jesse's Portfolio</h2></a>
+                <a href="../../index.html">
+                    <h2>Jesse's Portfolio</h2>
+                </a>
             </div>
             <ul class="nav-menu">
                 <li class="nav-item">
@@ -53,15 +57,16 @@
             <div class="container">
                 <h2>Interactive Demo</h2>
                 <p class="demo-description">
-                    Watch the solver in action or try it yourself with your own Primel game state.
+                    Watch the solver in action or <a href="https://converged.yt/primel/" target="_blank"
+                        style="color: #2563eb; text-decoration: none; font-weight: 500;">try it yourself</a> with your own Primel game state.
                 </p>
-                
+
                 <!-- Mode Toggle -->
                 <div class="mode-toggle">
                     <button id="autoDemoBtn" class="mode-btn active">Auto Demo</button>
                     <button id="manualModeBtn" class="mode-btn">Manual Mode</button>
                 </div>
-                
+
                 <div class="demo-container">
                     <!-- Auto Demo Mode -->
                     <div id="autoDemoMode" class="demo-mode active">
@@ -71,7 +76,8 @@
                                 <div class="game-controls">
                                     <div class="target-input-group">
                                         <label for="targetPrime">Target Prime:</label>
-                                        <input type="text" id="targetPrime" placeholder="Random" maxlength="5" class="target-input">
+                                        <input type="text" id="targetPrime" placeholder="Random" maxlength="5"
+                                            class="target-input">
                                         <button id="newGameBtn" class="btn btn-primary">New Game</button>
                                     </div>
                                     <div class="demo-controls">
@@ -85,11 +91,11 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="game-board" id="gameBoard">
                                 <!-- 6 guess rows will be generated here -->
                             </div>
-                            
+
                             <div class="game-status" id="gameStatus">
                                 <p>Click "New Game" to start the demo</p>
                             </div>
@@ -104,13 +110,13 @@
                             <div id="suggestionsResults" class="suggestions-results">
                                 <p class="no-results">Start a game to see optimal guesses.</p>
                             </div>
-                            
+
                             <div class="stats-section">
                                 <h4>Game Statistics</h4>
                                 <div id="gameStats" class="game-stats">
                                     <div class="stat-item">
                                         <span class="stat-label">Remaining Primes:</span>
-                                        <span class="stat-value" id="remainingPrimes">8,363</span>
+                                        <span class="stat-value" id="remainingPrimes">0</span>
                                     </div>
                                     <div class="stat-item">
                                         <span class="stat-label">Guesses Made:</span>
@@ -130,24 +136,27 @@
                         <div class="input-section">
                             <h3>Current Game State</h3>
                             <p style="text-align: center; margin-bottom: 1rem; color: #6b7280;">
-                                Try it yourself with the actual <a href="https://converged.yt/primel/" target="_blank" style="color: #2563eb; text-decoration: none; font-weight: 500;">Primel</a> game!
+                                Try it yourself with the actual <a href="https://converged.yt/primel/" target="_blank"
+                                    style="color: #2563eb; text-decoration: none; font-weight: 500;">Primel</a> game!
                             </p>
                             <div class="guess-history" id="guessHistory">
                                 <!-- Manual guess entries will be added here dynamically -->
                             </div>
-                            
+
                             <div class="add-guess-section">
                                 <h4>Add a Guess</h4>
                                 <div class="guess-input-row">
-                                    <input type="text" id="guessInput" placeholder="Enter 5-digit prime" maxlength="5" class="guess-input">
+                                    <input type="text" id="guessInput" placeholder="Enter 5-digit prime" maxlength="5"
+                                        class="guess-input">
                                     <div class="feedback-inputs">
-                                        <input type="text" id="feedbackInput" placeholder="01212" maxlength="5" class="feedback-input">
+                                        <input type="text" id="feedbackInput" placeholder="01212" maxlength="5"
+                                            class="feedback-input">
                                         <span class="feedback-help">0=Gray, 1=Yellow, 2=Green</span>
                                     </div>
                                     <button id="addGuessBtn" class="btn btn-primary">Add Guess</button>
                                 </div>
                             </div>
-                            
+
                             <div class="action-buttons">
                                 <button id="getSuggestionsBtn" class="btn btn-primary">Get Optimal Guesses</button>
                                 <button id="clearHistoryBtn" class="btn btn-secondary">Clear History</button>
@@ -161,15 +170,16 @@
                                 <p>Calculating optimal guesses...</p>
                             </div>
                             <div id="manualSuggestionsResults" class="suggestions-results">
-                                <p class="no-results">Enter your game state and click "Get Optimal Guesses" to see recommendations.</p>
+                                <p class="no-results">Enter your game state and click "Get Optimal Guesses" to see
+                                    recommendations.</p>
                             </div>
-                            
+
                             <div class="stats-section">
                                 <h4>Game Statistics</h4>
                                 <div id="manualGameStats" class="game-stats">
                                     <div class="stat-item">
                                         <span class="stat-label">Remaining Primes:</span>
-                                        <span class="stat-value" id="manualRemainingPrimes">8,363</span>
+                                        <span class="stat-value" id="manualRemainingPrimes">0</span>
                                     </div>
                                     <div class="stat-item">
                                         <span class="stat-label">Guesses Made:</span>
@@ -187,17 +197,31 @@
         <section class="technical-section">
             <div class="container">
                 <h2>Technical Implementation</h2>
-                
+
                 <div class="tech-grid">
+                    <div class="tech-card">
+                        <h3>JavaScript Web Implementation</h3>
+                        <p>
+                            To create an accessible web demo, the core Python algorithms were ported to JavaScript,
+                            enabling real-time entropy calculations directly in the browser without requiring a backend
+                            server.
+                        </p>
+                        <p>
+                            This implementation features interactive gameplay, smooth animations, and responsive design
+                            while maintaining the mathematical accuracy of the original Python solver.
+                        </p>
+                    </div>
+
                     <div class="tech-card">
                         <h3>Information Theory Foundation</h3>
                         <p>
-                            This solver is based on the information theory approach to Wordle optimization, 
-                            as explained in <a href="https://www.youtube.com/watch?v=v68zYyaEmEA" target="_blank" class="external-link">
-                            3Blue1Brown's excellent video</a> on the mathematics behind optimal Wordle strategies.
+                            This solver is based on the information theory approach to Wordle optimization,
+                            as explained in <a href="https://www.youtube.com/watch?v=v68zYyaEmEA" target="_blank"
+                                class="external-link">
+                                3Blue1Brown's excellent video</a> on the mathematics behind optimal Wordle strategies.
                         </p>
                         <p>
-                            The core idea is to maximize information gain with each guess by calculating the entropy 
+                            The core idea is to maximize information gain with each guess by calculating the entropy
                             of each possible guess across all remaining valid answers.
                         </p>
                     </div>
@@ -205,7 +229,7 @@
                     <div class="tech-card">
                         <h3>Entropy Calculation</h3>
                         <p>
-                            For each potential guess, we calculate how it would partition the remaining possible 
+                            For each potential guess, we calculate how it would partition the remaining possible
                             answers based on the feedback patterns it could generate. The entropy formula used is:
                         </p>
                         <div class="formula">
@@ -219,32 +243,19 @@
                     <div class="tech-card">
                         <h3>Prime Number Adaptation</h3>
                         <p>
-                            Unlike traditional Wordle, Primel uses 5-digit prime numbers as valid answers. 
-                            This creates a unique constraint set of 8,363 possible answers, requiring 
-                            specialized optimization for this mathematical domain.
+                            Unlike traditional Wordle, Primel uses 5-digit prime numbers as valid answers.
+                            This creates a unique constraint set of 8,363 possible answers.
                         </p>
                         <p>
-                            The solver maintains a dynamic list of remaining valid primes and updates 
+                            The solver maintains a dynamic list of remaining valid primes and updates
                             it after each guess based on the feedback received.
-                        </p>
-                    </div>
-
-                    <div class="tech-card">
-                        <h3>JavaScript Web Implementation</h3>
-                        <p>
-                            To create an accessible web demo, the core Python algorithms were ported to JavaScript, 
-                            enabling real-time entropy calculations directly in the browser without requiring a backend server.
-                        </p>
-                        <p>
-                            This implementation features interactive gameplay, smooth animations, and responsive design 
-                            while maintaining the mathematical accuracy of the original Python solver.
                         </p>
                     </div>
 
                     <div class="tech-card">
                         <h3>Implementation Details</h3>
                         <p>
-                            The solver combines Python for research and JavaScript for web deployment. 
+                            The original solver was written in Python for proof of concept, and JavaScript for web deployment.
                             Key components include:
                         </p>
                         <ul>
@@ -327,4 +338,5 @@
 
     <script src="primel-solver-github.js"></script>
 </body>
+
 </html>
