@@ -10,7 +10,7 @@ def load_prime_list():
     """
     try:
         # Try loading as CSV with header
-        df = pd.read_csv('primelist.csv')
+        df = pd.read_csv('projects/primel-solver/primelist.csv')
         if 'prime' in df.columns:
             return df['prime'].tolist()
         else:
