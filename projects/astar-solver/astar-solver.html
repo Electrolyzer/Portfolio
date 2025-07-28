@@ -41,7 +41,7 @@
             <div class="container">
                 <h1>A* Pathfinding Algorithms</h1>
                 <p class="project-subtitle">
-                    Interactive maze solving with limited knowledge and comprehensive performance analysis
+                    Advanced pathfinding algorithms with limited visibility and comprehensive performance benchmarking
                 </p>
                 <div class="project-meta">
                     <span class="meta-item">Java</span>
@@ -193,12 +193,10 @@
                             new information is discovered.
                         </p>
                         <p>
-                            <strong>Repeated Backward A*:</strong> Plans from goal to current position, often less
-                            efficient due to location of the known information.
+                            <strong>Repeated Backward A*:</strong> Plans from goal to current position. Less efficient because searches encounter unknown areas late in the process, requiring extensive computation to find new paths toward the agent's current location, whereas forward search operates in a smaller known area.
                         </p>
                         <p>
-                            <strong>Adaptive A*:</strong> Learns better heuristics from previous searches, improving
-                            performance as knowledge is gained.
+                            <strong>Adaptive A*:</strong> Learns improved heuristics from previous searches by updating distance estimates based on actual path costs discovered, becoming more efficient with repeated use.
                         </p>
                     </div>
 
@@ -206,7 +204,7 @@
                         <h3>Limited Knowledge Simulation</h3>
                         <p>
                             The algorithms operate with partial observability through a configurable sight radius (1-20
-                            cells).
+                            cell radius).
                             This simulates real-world scenarios where complete environment information isn't available.
                         </p>
                         <p>
@@ -232,17 +230,17 @@
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>Forward A* (g-tie)</td>
+                                        <td>Repeated Forward A* (g-tie)</td>
                                         <td>9,847</td>
                                         <td>12.3</td>
                                     </tr>
                                     <tr>
-                                        <td>Forward A* (h-tie)</td>
+                                        <td>Repeated Forward A* (h-tie)</td>
                                         <td>254,891</td>
                                         <td>45.7</td>
                                     </tr>
                                     <tr>
-                                        <td>Backward A* (g-tie)</td>
+                                        <td>Repeated Backward A* (g-tie)</td>
                                         <td>125,432</td>
                                         <td>28.9</td>
                                     </tr>
