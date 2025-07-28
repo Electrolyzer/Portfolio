@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A* Pathfinding Algorithms - Jesse's Portfolio</title>
+    <link rel="stylesheet" href="../../styles.css">
+    <link rel="stylesheet" href="astar-solver.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="../../index.html">
+                    <h2>Jesse's Portfolio</h2>
+                </a>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="../../index.html" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="../../index.html#about" class="nav-link">About</a>
+                </li>
+                <li class="nav-item">
+                    <a href="../../index.html#projects" class="nav-link">Projects</a>
+                </li>
+                <li class="nav-item">
+                    <a href="../../index.html#contact" class="nav-link">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="solver-main">
+        <!-- Project Header -->
+        <section class="project-header">
+            <div class="container">
+                <h1>A* Pathfinding Algorithms</h1>
+                <p class="project-subtitle">
+                    Interactive maze solving with limited knowledge and comprehensive performance analysis
+                </p>
+                <div class="project-meta">
+                    <span class="meta-item">Java</span>
+                    <span class="meta-item">Swing</span>
+                    <span class="meta-item">Algorithms</span>
+                    <span class="meta-item">Data Structures</span>
+                    <span class="meta-item">Cross-Platform</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Visual Demo Section -->
+        <section class="demo-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Project Overview</h2>
+                    <a href="https://github.com/Electrolyzer/A-Star_Maze_Solvers" class="github-link" target="_blank">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                        View on GitHub
+                    </a>
+                </div>
+                <p class="demo-description">
+                    This project implements three highly parameterizable variants of the A* search algorithm for
+                    pathfinding with limited knowledge.
+                    Each algorithm can be configured with different tiebreaker strategies (g-value vs h-value
+                    preference), sight radius settings (1-20 cells),
+                    and algorithm types (Forward, Backward, or Adaptive). The application provides comprehensive tools
+                    for comparing how these
+                    parameter choices affect performance across different maze configurations.
+                </p>
+
+                <div class="demo-container">
+                    <!-- Main Interface Screenshot - Left Image, Right Text -->
+                    <div class="screenshot-section alternating-left">
+                        <div class="screenshot-content">
+                            <div class="screenshot-image">
+                                <img src="assets/main-interface.png" alt="A* Maze Solver Main Interface" class="interface-screenshot">
+                            </div>
+                            <div class="screenshot-text">
+                                <h3>Interactive Maze Solver</h3>
+                                <p class="screenshot-caption">
+                                    The main interface features three integrated modes: Interactive Solver, Saved
+                                    Results, and Performance Analysis.
+                                    Users can create custom mazes, configure algorithm parameters, and watch real-time
+                                    pathfinding visualization.
+                                </p>
+                                <p class="screenshot-caption">
+                                    The left panel provides comprehensive algorithm configuration options, including
+                                    tiebreaker strategies,
+                                    sight radius settings, and algorithm type selection. All settings persist between
+                                    sessions for consistent testing.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Algorithm Visualization - Right Image, Left Text -->
+                    <div class="screenshot-section alternating-right">
+                        <div class="screenshot-content">
+                            <div class="screenshot-text">
+                                <h3>Real-Time Algorithm Visualization</h3>
+                                <p class="screenshot-caption">
+                                    Watch algorithms explore the maze in real-time, showing explored cells, the current
+                                    frontier,
+                                    and the final optimal path. The sight radius limitation creates realistic partial
+                                    observability.
+                                </p>
+                                <p class="screenshot-caption">
+                                    Different colors represent various cell states: unexplored (white), explored (light
+                                    pink),
+                                    current planned path (yellow), goal (red). The visualization updates dynamically
+                                    as the algorithm progresses.
+                                </p>
+                            </div>
+                            <div class="screenshot-image">
+                                <video class="algorithm-video" autoplay muted loop playsinline>
+                                    <source src="assets/algorithm-visualization.mp4" type="video/mp4">
+                                    <img src="assets/main-interface.png" alt="Algorithm visualization fallback">
+                                </video>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Performance Analysis - Left Image, Right Text -->
+                    <div class="screenshot-section alternating-left">
+                        <div class="screenshot-content">
+                            <div class="screenshot-image">
+                                <div class="performance-carousel">
+                                    <div class="carousel-container">
+                                        <div class="carousel-slides">
+                                            <div class="carousel-slide active">
+                                                <img src="assets/data-comparison.png" alt="Algorithm Comparison Analysis">
+                                                <div class="slide-caption">Algorithm Performance Comparison</div>
+                                            </div>
+                                            <div class="carousel-slide">
+                                                <img src="assets/data-heatmaps.png" alt="Heat Map Visualizations">
+                                                <div class="slide-caption">Exploration Pattern Heat Maps</div>
+                                            </div>
+                                            <div class="carousel-slide">
+                                                <img src="assets/data-individual.png" alt="Individual Algorithm Results">
+                                                <div class="slide-caption">Individual Algorithm Analysis</div>
+                                            </div>
+                                            <div class="carousel-slide">
+                                                <img src="assets/data-statistics.png" alt="Statistical Analysis">
+                                                <div class="slide-caption">Statistical Performance Metrics</div>
+                                            </div>
+                                        </div>
+                                        <div class="carousel-dots">
+                                            <span class="dot active" data-slide="0"></span>
+                                            <span class="dot" data-slide="1"></span>
+                                            <span class="dot" data-slide="2"></span>
+                                            <span class="dot" data-slide="3"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="screenshot-text">
+                                <h3>Performance Analysis & Heat Maps</h3>
+                                <p class="screenshot-caption">
+                                    Comprehensive performance analysis with heat map visualizations showing exploration
+                                    patterns,
+                                    statistical comparisons between algorithms, and detailed performance metrics.
+                                </p>
+                                <p class="screenshot-caption">
+                                    Run batch tests across multiple mazes to compare algorithm efficiency. Heat maps
+                                    reveal how different
+                                    parameter choices affect exploration patterns and overall performance
+                                    characteristics.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Technical Implementation -->
+        <section class="technical-section">
+            <div class="container">
+                <h2>Technical Implementation</h2>
+
+                <div class="tech-grid">
+                    <div class="tech-card">
+                        <h3>Algorithm Variants</h3>
+                        <p>
+                            <strong>Repeated Forward A*:</strong> Plans from current position to goal, replanning when
+                            new information is discovered.
+                        </p>
+                        <p>
+                            <strong>Repeated Backward A*:</strong> Plans from goal to current position, often less
+                            efficient due to location of the known information.
+                        </p>
+                        <p>
+                            <strong>Adaptive A*:</strong> Learns better heuristics from previous searches, improving
+                            performance as knowledge is gained.
+                        </p>
+                    </div>
+
+                    <div class="tech-card">
+                        <h3>Limited Knowledge Simulation</h3>
+                        <p>
+                            The algorithms operate with partial observability through a configurable sight radius (1-20
+                            cells).
+                            This simulates real-world scenarios where complete environment information isn't available.
+                        </p>
+                        <p>
+                            Agents must explore the environment while pathfinding, discovering walls and open spaces
+                            within their sight radius as they move through the maze.
+                        </p>
+                    </div>
+
+                    <div class="tech-card">
+                        <h3>Performance Analysis</h3>
+                        <p>
+                            Comprehensive benchmarking across 50 predetermined mazes reveals significant performance
+                            differences:
+                        </p>
+                        <div class="performance-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Algorithm</th>
+                                        <th>Avg Expanded Cells</th>
+                                        <th>Avg Time (ms)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Forward A* (g-tie)</td>
+                                        <td>9,847</td>
+                                        <td>12.3</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Forward A* (h-tie)</td>
+                                        <td>254,891</td>
+                                        <td>45.7</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Backward A* (g-tie)</td>
+                                        <td>125,432</td>
+                                        <td>28.9</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Adaptive A* (g-tie)</td>
+                                        <td>9,623</td>
+                                        <td>13.1</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="tech-card">
+                        <h3>Data Structures & Architecture</h3>
+                        <p>
+                            <strong>Custom Priority Queue:</strong> Optimized for A* search operations with efficient
+                            priority updates.
+                        </p>
+                        <p>
+                            <strong>Modular Design:</strong> Clean separation between algorithm logic, UI components,
+                            and data management.
+                        </p>
+                        <p>
+                            <strong>Cross-Platform Support:</strong> Smart build system with dual launchers for end
+                            users and developers.
+                        </p>
+                    </div>
+
+                    <div class="tech-card">
+                        <h3>Key Features</h3>
+                        <ul>
+                            <li>Interactive maze editor with multiple editing modes</li>
+                            <li>Real-time algorithm visualization</li>
+                            <li>Configurable parameters (tiebreaker strategy, sight radius)</li>
+                            <li>Heat map generation showing exploration patterns</li>
+                            <li>Persistent configuration management</li>
+                            <li>Result export/import system</li>
+                            <li>Comprehensive unit testing</li>
+                        </ul>
+                    </div>
+
+                    <div class="tech-card">
+                        <h3>Software Engineering</h3>
+                        <p>
+                            The project demonstrates professional development practices including:
+                        </p>
+                        <ul>
+                            <li>Smart build detection (only rebuilds when necessary)</li>
+                            <li>Cross-platform launcher system (Windows/Unix/macOS)</li>
+                            <li>Clean project organization with proper separation of concerns</li>
+                            <li>Comprehensive documentation and README</li>
+                            <li>Professional error handling and user feedback</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="code-section">
+                    <h3>Core Algorithm Implementation</h3>
+                    <p>Here's a simplified version of the A* search implementation:</p>
+                    <pre><code>public class MazeSolver {
+    private PriorityQueue openList;
+    private Set&lt;State&gt; closedList;
+    private int sightRadius;
+    
+    public SolveResult solveMaze(char[][] maze, Coordinates start, Coordinates goal) {
+        openList = new PriorityQueue();
+        closedList = new HashSet&lt;&gt;();
+        
+        State startState = new State(start, 0, calculateHeuristic(start, goal));
+        openList.add(startState);
+        
+        while (!openList.isEmpty()) {
+            State current = openList.poll();
+            
+            if (current.getPosition().equals(goal)) {
+                return reconstructPath(current);
+            }
+            
+            closedList.add(current);
+            
+            // Explore visible neighbors within sight radius
+            for (Coordinates neighbor : getVisibleNeighbors(current.getPosition(), maze)) {
+                if (closedList.contains(new State(neighbor, 0, 0))) continue;
+                
+                int tentativeG = current.getG() + 1;
+                State neighborState = new State(neighbor, tentativeG, 
+                                              calculateHeuristic(neighbor, goal));
+                neighborState.setParent(current);
+                
+                if (!openList.contains(neighborState) || 
+                    tentativeG &lt; neighborState.getG()) {
+                    openList.add(neighborState);
+                }
+            }
+        }
+        
+        return new SolveResult(false, closedList.size(), 0);
+    }
+    
+    private List&lt;Coordinates&gt; getVisibleNeighbors(Coordinates pos, char[][] maze) {
+        // Return neighbors within sight radius that are not walls
+        // Implementation handles partial observability
+    }
+}</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Installation & Usage -->
+        <section class="usage-section">
+            <div class="container">
+                <h2>Installation & Usage</h2>
+
+                <div class="usage-grid">
+                    <div class="usage-card">
+                        <h3>Download from <a href="https://github.com/Electrolyzer/A-Star_Maze_Solvers" target="_blank">GitHub</a></h3>
+                        <p><strong>Prerequisites:</strong> Java 17 or higher</p>
+                        <div class="code-block">
+                            <p><strong>Clone the repository:</strong></p>
+                            <div class="code-container">
+                                <code>git clone https://github.com/Electrolyzer/A-Star_Maze_Solvers.git</code>
+                                <button class="copy-btn" onclick="copyToClipboard('git clone https://github.com/Electrolyzer/A-Star_Maze_Solvers.git', this)">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                            <p><strong>Navigate to directory:</strong></p>
+                            <div class="code-container">
+                                <code>cd A-Star_Maze_Solvers</code>
+                                <button class="copy-btn" onclick="copyToClipboard('cd A-Star_Maze_Solvers', this)">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <p>Or download the ZIP file directly from the GitHub repository.</p>
+                    </div>
+
+                    <div class="usage-card">
+                        <h3>Quick Start</h3>
+                        <p>Launch the application with smart build detection:</p>
+                        <div class="code-block">
+                            <p><strong>Windows:</strong></p>
+                            <code>.\launcher.bat</code>
+                            <p><strong>Unix/Linux/macOS:</strong></p>
+                            <code>./launcher.sh</code>
+                        </div>
+                        <p>The launcher automatically builds the project if needed and starts the application.</p>
+                    </div>
+
+                    <div class="usage-card">
+                        <h3>Development Mode</h3>
+                        <p>For development with forced rebuilds:</p>
+                        <div class="code-block">
+                            <p><strong>Windows:</strong></p>
+                            <code>.\dev-launcher.bat</code>
+                            <p><strong>Unix/Linux/macOS:</strong></p>
+                            <code>./dev-launcher.sh</code>
+                        </div>
+                        <p>Development launchers always clean and rebuild the project before running.</p>
+                    </div>
+
+                    <div class="usage-card">
+                        <h3>Using the Application</h3>
+                        <ul>
+                            <li><strong>Interactive Solver:</strong> Create and edit mazes, configure algorithms, watch
+                                real-time solving</li>
+                            <li><strong>Saved Results:</strong> Load and analyze previously saved maze solutions</li>
+                            <li><strong>Performance Analysis:</strong> Run batch tests, compare algorithms, view heat
+                                maps</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Links Section -->
+        <section class="links-section">
+            <div class="container">
+                <h2>Project Resources</h2>
+                <div class="resource-links">
+                    <a href="https://github.com/Electrolyzer/A-Star_Maze_Solvers" class="resource-link" target="_blank">
+                        <h3>View Source Code</h3>
+                        <p>Complete Java implementation with cross-platform support</p>
+                    </a>
+                    <a href="https://github.com/Electrolyzer/A-Star_Maze_Solvers/releases" class="resource-link"
+                        target="_blank">
+                        <h3>Download Application</h3>
+                        <p>Ready-to-run releases for easy installation</p>
+                    </a>
+                    <a href="../../index.html#contact" class="resource-link">
+                        <h3>Get In Touch</h3>
+                        <p>Discuss this project or other opportunities</p>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Jesse Lerner. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Auto-scroll to the demo section after page load
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                const demoSection = document.querySelector('.demo-section');
+                if (demoSection) {
+                    demoSection.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            }, 500); // Small delay to ensure page is fully loaded
+
+            // Initialize carousel
+            initializeCarousel();
+        });
+
+        function initializeCarousel() {
+            const slides = document.querySelectorAll('.carousel-slide');
+            const dots = document.querySelectorAll('.dot');
+            const carousel = document.querySelector('.performance-carousel');
+            let currentSlide = 0;
+            let autoAdvanceTimer;
+            let isPaused = false;
+
+            if (slides.length === 0) return;
+
+            function showSlide(index) {
+                // Remove active class from all slides and dots
+                slides.forEach(slide => {
+                    slide.classList.remove('active', 'prev');
+                });
+                dots.forEach(dot => dot.classList.remove('active'));
+
+                // Add prev class to current slide for slide-out animation
+                if (slides[currentSlide]) {
+                    slides[currentSlide].classList.add('prev');
+                }
+
+                // Update current slide index
+                currentSlide = index;
+
+                // Add active class to new slide and dot
+                slides[currentSlide].classList.add('active');
+                dots[currentSlide].classList.add('active');
+            }
+
+            function nextSlide() {
+                const next = (currentSlide + 1) % slides.length;
+                showSlide(next);
+            }
+
+            function startAutoAdvance() {
+                if (!isPaused) {
+                    autoAdvanceTimer = setInterval(nextSlide, 4000); // 4 seconds per slide
+                }
+            }
+
+            function stopAutoAdvance() {
+                clearInterval(autoAdvanceTimer);
+            }
+
+            // Add click handlers to dots
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', () => {
+                    showSlide(index);
+                    stopAutoAdvance();
+                    startAutoAdvance(); // Restart timer
+                });
+            });
+
+            // Pause on hover
+            carousel.addEventListener('mouseenter', () => {
+                isPaused = true;
+                stopAutoAdvance();
+            });
+
+            // Resume on mouse leave
+            carousel.addEventListener('mouseleave', () => {
+                isPaused = false;
+                startAutoAdvance();
+            });
+
+            // Start auto-advance
+            startAutoAdvance();
+        }
+
+        // Copy to clipboard functionality
+        function copyToClipboard(text, button) {
+            navigator.clipboard.writeText(text).then(function() {
+                // Success feedback
+                const originalContent = button.innerHTML;
+                button.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20,6 9,17 4,12"></polyline></svg>';
+                button.classList.add('copied');
+                
+                setTimeout(() => {
+                    button.innerHTML = originalContent;
+                    button.classList.remove('copied');
+                }, 2000);
+            }).catch(function(err) {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                
+                // Success feedback
+                const originalContent = button.innerHTML;
+                button.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20,6 9,17 4,12"></polyline></svg>';
+                button.classList.add('copied');
+                
+                setTimeout(() => {
+                    button.innerHTML = originalContent;
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+
+</html>
