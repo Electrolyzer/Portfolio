@@ -52,7 +52,8 @@
                 </div>
                 <div class="app-store-badge">
                     <a href="https://apps.apple.com/us/app/nanopstat/id6504046021" target="_blank">
-                        <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="Download on the App Store" style="height: 40px;">
+                        <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg"
+                            alt="Download on the App Store" style="height: 40px;">
                     </a>
                 </div>
             </div>
@@ -79,13 +80,17 @@
                     </div>
                 </div>
                 <p class="overview-description">
-                    NanoPStat is a professional iOS application that connects to Analytical Instrument Systems (AIS) 
-                    electrochemical devices via Bluetooth. The app enables scientists and researchers to configure experiments, 
-                    collect real-time data, and analyze results directly on their iOS devices with seamless cloud synchronization.
+                    NanoPStat is a professional iOS application that connects to Analytical Instrument Systems (AIS)
+                    electrochemical devices via Bluetooth. The app enables scientists and researchers to configure
+                    experiments,
+                    collect real-time data, and analyze results directly on their iOS devices with cloud
+                    synchronization.
                 </p>
                 <p class="overview-description">
-                    As the solo developer, I built this app from the ground up using modern iOS technologies including SwiftUI 
-                    for the interface, CoreBluetooth for device communication, CoreData for local storage, and CloudKit for 
+                    As the solo developer, I built this app from the ground up using modern iOS technologies including
+                    SwiftUI
+                    for the interface, CoreBluetooth for device communication, CoreData for local storage, and CloudKit
+                    for
                     cross-device data synchronization.
                 </p>
             </div>
@@ -95,135 +100,163 @@
         <section class="screenshots-section">
             <div class="container">
                 <h2>App Interface</h2>
-                <div class="screenshots-container">
-                    <!-- Connection Screen -->
-                    <div class="screenshot-section">
-                        <div class="screenshot-content">
-                            <div class="screenshot-image">
-                                <img src="assets/connection_screen.webp" alt="Bluetooth Device Connection" class="app-screenshot">
-                            </div>
-                            <div class="screenshot-text">
-                                <h3>Bluetooth Device Connection</h3>
-                                <p class="screenshot-caption">
-                                    Seamless Bluetooth connectivity using CoreBluetooth framework. The app automatically 
-                                    discovers and connects to compatible AIS electrochemical devices including DLK-NPx, 
-                                    DLK-MP1, and DLK-Wellstat series.
-                                </p>
-                                <div class="tech-highlights">
-                                    <span class="tech-tag">CoreBluetooth</span>
-                                    <span class="tech-tag">Device Discovery</span>
-                                    <span class="tech-tag">Connection Management</span>
+                <div class="tabbed-interface">
+                    <!-- Tab Navigation -->
+                    <div class="tab-navigation">
+                        <button class="tab-button active" data-tab="connection">Device Connection</button>
+                        <button class="tab-button" data-tab="experiments">Experiments</button>
+                        <button class="tab-button" data-tab="live-data">Live Data</button>
+                        <button class="tab-button" data-tab="analysis">Data Analysis</button>
+                        <button class="tab-button" data-tab="sequences">Serial Sequences</button>
+                        <button class="tab-button" data-tab="settings">Settings</button>
+                    </div>
+
+                    <!-- Tab Content -->
+                    <div class="tab-content">
+                        <!-- Connection Tab -->
+                        <div class="tab-panel active" id="connection">
+                            <div class="tab-panel-content">
+                                <div class="tab-screenshot">
+                                    <img src="assets/connection_screen.webp" alt="Bluetooth Device Connection"
+                                        class="tab-image">
+                                </div>
+                                <div class="tab-description">
+                                    <h3>Bluetooth Device Connection</h3>
+                                    <p>
+                                        Bluetooth connectivity using CoreBluetooth framework. The app discovers and
+                                        connects
+                                        to compatible AIS electrochemical devices including DLK-NPx, DLK-MP1, and
+                                        DLK-Wellstat series.
+                                    </p>
+                                    <div class="tech-highlights">
+                                        <span class="tech-tag">CoreBluetooth</span>
+                                        <span class="tech-tag">Device Discovery</span>
+                                        <span class="tech-tag">Connection Management</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Experiment Configuration -->
-                    <div class="screenshot-section reverse">
-                        <div class="screenshot-content">
-                            <div class="screenshot-text">
-                                <h3>Experiment Configuration</h3>
-                                <p class="screenshot-caption">
-                                    Intuitive experiment setup interface allowing researchers to configure voltammetric 
-                                    analyses and stripping analysis parameters. Settings are saved locally using CoreData 
-                                    for quick access to frequently used configurations.
-                                </p>
-                                <div class="tech-highlights">
-                                    <span class="tech-tag">SwiftUI Forms</span>
-                                    <span class="tech-tag">CoreData</span>
-                                    <span class="tech-tag">Parameter Validation</span>
+                        <!-- Experiments Tab -->
+                        <div class="tab-panel" id="experiments">
+                            <div class="tab-panel-content">
+                                <div class="tab-screenshot">
+                                    <img src="assets/experiment_editing.webp" alt="Experiment Configuration"
+                                        class="tab-image">
                                 </div>
-                            </div>
-                            <div class="screenshot-image">
-                                <img src="assets/experiment_editing.webp" alt="Experiment Configuration" class="app-screenshot">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Live Data Collection -->
-                    <div class="screenshot-section">
-                        <div class="screenshot-content">
-                            <div class="screenshot-image">
-                                <img src="assets/live_results.webp" alt="Real-time Data Visualization" class="app-screenshot">
-                            </div>
-                            <div class="screenshot-text">
-                                <h3>Real-time Data Visualization</h3>
-                                <p class="screenshot-caption">
-                                    Live data plotting with real-time updates as experiments run. The interface provides 
-                                    immediate feedback on data collection progress with smooth, responsive charts that 
-                                    update as data streams from the connected device.
-                                </p>
-                                <div class="tech-highlights">
-                                    <span class="tech-tag">Real-time Plotting</span>
-                                    <span class="tech-tag">Data Streaming</span>
-                                    <span class="tech-tag">SwiftUI Charts</span>
+                                <div class="tab-description">
+                                    <h3>Experiment Configuration</h3>
+                                    <p>
+                                        Experiment setup interface allowing researchers to configure electrochemical
+                                        experiments.
+                                        Settings are saved locally using CoreData for persistent storage across
+                                        sessions.
+                                    </p>
+                                    <div class="tech-highlights">
+                                        <span class="tech-tag">SwiftUI Forms</span>
+                                        <span class="tech-tag">CoreData</span>
+                                        <span class="tech-tag">Parameter Validation</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Advanced Configuration -->
-                    <div class="screenshot-section reverse">
-                        <div class="screenshot-content">
-                            <div class="screenshot-text">
-                                <h3>Advanced Serial Sequence Configuration</h3>
-                                <p class="screenshot-caption">
-                                    Sophisticated parameter configuration for complex experimental sequences. The interface 
-                                    provides fine-grained control over device settings while maintaining an intuitive 
-                                    user experience through careful SwiftUI design.
-                                </p>
-                                <div class="tech-highlights">
-                                    <span class="tech-tag">Complex UI</span>
-                                    <span class="tech-tag">Parameter Management</span>
-                                    <span class="tech-tag">User Experience</span>
+                        <!-- Live Data Tab -->
+                        <div class="tab-panel" id="live-data">
+                            <div class="tab-panel-content">
+                                <div class="tab-screenshot">
+                                    <img src="assets/live_results.webp" alt="Real-time Data Visualization"
+                                        class="tab-image">
                                 </div>
-                            </div>
-                            <div class="screenshot-image">
-                                <img src="assets/serial_sequence_config.webp" alt="Serial Sequence Configuration" class="app-screenshot">
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Data Analysis -->
-                    <div class="screenshot-section">
-                        <div class="screenshot-content">
-                            <div class="screenshot-image">
-                                <img src="assets/saved_result_viewing.webp" alt="Data Analysis and Comparison" class="app-screenshot">
-                            </div>
-                            <div class="screenshot-text">
-                                <h3>Data Analysis & Comparison</h3>
-                                <p class="screenshot-caption">
-                                    Comprehensive data analysis tools with multi-experiment comparison, interactive zoom and pan, 
-                                    selective data visualization, and advanced smoothing algorithms. Results are automatically 
-                                    synced to iCloud for cross-device access.
-                                </p>
-                                <div class="tech-highlights">
-                                    <span class="tech-tag">CloudKit Sync</span>
-                                    <span class="tech-tag">Data Analysis</span>
-                                    <span class="tech-tag">Interactive Charts</span>
+                                <div class="tab-description">
+                                    <h3>Real-time Data Visualization</h3>
+                                    <p>
+                                        Live data plotting with real-time updates as experiments run. The interface
+                                        provides
+                                        immediate feedback on data collection progress with smooth, responsive charts
+                                        that
+                                        update as data streams from the connected device.
+                                    </p>
+                                    <div class="tech-highlights">
+                                        <span class="tech-tag">Real-time Plotting</span>
+                                        <span class="tech-tag">Data Streaming</span>
+                                        <span class="tech-tag">SwiftUI Charts</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Options Menu -->
-                    <div class="screenshot-section reverse">
-                        <div class="screenshot-content">
-                            <div class="screenshot-text">
-                                <h3>Comprehensive Settings</h3>
-                                <p class="screenshot-caption">
-                                    Detailed options menu providing access to all app features including data export, 
-                                    device management, and user preferences. Clean, organized interface following iOS 
-                                    design guidelines for optimal user experience.
-                                </p>
-                                <div class="tech-highlights">
-                                    <span class="tech-tag">iOS Design Guidelines</span>
-                                    <span class="tech-tag">Settings Management</span>
-                                    <span class="tech-tag">Data Export</span>
+                        <!-- Data Analysis Tab -->
+                        <div class="tab-panel" id="analysis">
+                            <div class="tab-panel-content">
+                                <div class="tab-screenshot">
+                                    <img src="assets/saved_result_viewing.webp" alt="Data Analysis and Comparison"
+                                        class="tab-image">
+                                </div>
+                                <div class="tab-description">
+                                    <h3>Data Analysis & Comparison</h3>
+                                    <p>
+                                        Interactive data analysis tools with multi-experiment comparison, selective data
+                                        visualization,
+                                        and advanced smoothing algorithms. Results are automatically synced to iCloud
+                                        for cross-device access.
+                                    </p>
+                                    <div class="tech-highlights">
+                                        <span class="tech-tag">CloudKit Sync</span>
+                                        <span class="tech-tag">Data Analysis</span>
+                                        <span class="tech-tag">Interactive Charts</span>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="screenshot-image">
-                                <img src="assets/more_options_menu.webp" alt="App Settings and Options" class="app-screenshot">
+                        </div>
+
+                        <!-- Serial Sequences Tab -->
+                        <div class="tab-panel" id="sequences">
+                            <div class="tab-panel-content">
+                                <div class="tab-screenshot">
+                                    <img src="assets/serial_sequence_config.webp" alt="Serial Sequence Configuration"
+                                        class="tab-image">
+                                </div>
+                                <div class="tab-description">
+                                    <h3>Serial Sequence Configuration</h3>
+                                    <p>
+                                        Device information display and Serial Sequence management. Allows users to
+                                        modify device
+                                        Serial Sequence settings or run pre-loaded command sequences. Serial Sequences
+                                        can be
+                                        created in the app or loaded from a computer.
+                                    </p>
+                                    <div class="tech-highlights">
+                                        <span class="tech-tag">Device Management</span>
+                                        <span class="tech-tag">Command Sequences</span>
+                                        <span class="tech-tag">SwiftUI</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Settings Tab -->
+                        <div class="tab-panel" id="settings">
+                            <div class="tab-panel-content">
+                                <div class="tab-screenshot">
+                                    <img src="assets/more_options_menu.webp" alt="App Settings and Options"
+                                        class="tab-image">
+                                </div>
+                                <div class="tab-description">
+                                    <h3>App Options & Settings</h3>
+                                    <p>
+                                        Options menu providing access to various additional app functions including
+                                        setting up serial sequences,
+                                        changing device settings, modifying app settings, adding tags to collected data,
+                                        and viewing
+                                        the manual.
+                                    </p>
+                                    <div class="tech-highlights">
+                                        <span class="tech-tag">Settings Management</span>
+                                        <span class="tech-tag">Data Tagging</span>
+                                        <span class="tech-tag">Device Configuration</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -240,28 +273,26 @@
                     <div class="tech-card">
                         <h3>iOS Development Stack</h3>
                         <p>
-                            Built entirely in <strong>Swift</strong> using <strong>SwiftUI</strong> for a modern, 
-                            declarative user interface. The app leverages the latest iOS frameworks and follows 
+                            Built entirely in <strong>Swift</strong> using <strong>SwiftUI</strong> for a modern,
+                            declarative user interface. The app leverages the latest iOS frameworks and follows
                             Apple's design guidelines for professional-grade applications.
                         </p>
                         <ul>
                             <li>SwiftUI for responsive, declarative UI</li>
                             <li>Combine framework for reactive programming</li>
-                            <li>iOS 17+ compatibility with backward support</li>
-                            <li>Universal app supporting iPhone, iPad, and Mac</li>
+                            <li>iOS 17+</li>
                         </ul>
                     </div>
 
                     <div class="tech-card">
                         <h3>Bluetooth Communication</h3>
                         <p>
-                            Implemented robust Bluetooth connectivity using <strong>CoreBluetooth</strong> framework 
-                            to communicate with multiple series of electrochemical devices. Handles device discovery, 
+                            Implemented Bluetooth connectivity using <strong>CoreBluetooth</strong> framework
+                            to communicate with multiple series of electrochemical devices. Handles device discovery,
                             connection management, and real-time data streaming.
                         </p>
                         <ul>
-                            <li>Multi-device support (DLK-NPx, DLK-MP1, DLK-Wellstat)</li>
-                            <li>Automatic device discovery and pairing</li>
+                            <li>Automatic device discovery and one-click connection</li>
                             <li>Real-time data streaming and parsing</li>
                             <li>Connection state management and error handling</li>
                         </ul>
@@ -270,14 +301,14 @@
                     <div class="tech-card">
                         <h3>Data Management</h3>
                         <p>
-                            Sophisticated data architecture using <strong>CoreData</strong> for local experiment 
-                            storage and <strong>CloudKit</strong> for seamless cross-device synchronization. 
+                            Sophisticated data architecture using <strong>CoreData</strong> for local experiment
+                            storage and <strong>CloudKit</strong> for cross-device synchronization.
                             Ensures data integrity and availability across all user devices.
                         </p>
                         <ul>
                             <li>CoreData for local experiment configurations</li>
-                            <li>CloudKit for result synchronization</li>
-                            <li>Automatic backup and restore functionality</li>
+                            <li>CloudKit for experiment result synchronization</li>
+                            <li>Automatic backup and load functionality</li>
                             <li>Data export capabilities for further analysis</li>
                         </ul>
                     </div>
@@ -285,8 +316,9 @@
                     <div class="tech-card">
                         <h3>Advanced Data Visualization</h3>
                         <p>
-                            Custom-built charting system with real-time updates, interactive controls, and advanced 
-                            signal processing. Implements sophisticated smoothing algorithms for clean data presentation.
+                            Custom-built charting system with real-time updates, interactive controls, and advanced
+                            signal processing. Implements sophisticated smoothing algorithms for clean data
+                            presentation.
                         </p>
                         <ul>
                             <li>Real-time plotting with smooth animations</li>
@@ -299,73 +331,22 @@
                     <div class="tech-card">
                         <h3>Professional Features</h3>
                         <p>
-                            Enterprise-grade features designed for scientific research environments, including 
-                            comprehensive experiment management, data analysis tools, and professional data export options.
+                            Enterprise-grade features designed for scientific research environments, including
+                            comprehensive experiment management, data analysis tools, and professional data export
+                            options.
                         </p>
                         <ul>
-                            <li>Experiment template system</li>
                             <li>Batch data processing capabilities</li>
+                            <li>Experiment sequence auto-start ability</li>
                             <li>Professional data export formats</li>
                             <li>Cross-platform data sharing</li>
                         </ul>
                     </div>
 
-                    <div class="tech-card">
-                        <h3>Development Approach</h3>
-                        <p>
-                            Solo development project showcasing end-to-end iOS development skills, from initial 
-                            architecture design through App Store deployment. Emphasis on clean code, user experience, 
-                            and maintainable architecture.
-                        </p>
-                        <ul>
-                            <li>MVVM architecture pattern</li>
-                            <li>Comprehensive error handling</li>
-                            <li>Extensive testing and validation</li>
-                            <li>App Store optimization and deployment</li>
-                        </ul>
-                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- Key Features -->
-        <section class="features-section">
-            <div class="container">
-                <h2>Key Features</h2>
-                <div class="features-grid">
-                    <div class="feature-card">
-                        <div class="feature-icon">📱</div>
-                        <h3>Universal iOS App</h3>
-                        <p>Native support for iPhone, iPad, Mac, and Apple Vision Pro with optimized interfaces for each platform.</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">🔗</div>
-                        <h3>Bluetooth Connectivity</h3>
-                        <p>Seamless connection to multiple series of professional electrochemical analysis devices.</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">⚡</div>
-                        <h3>Real-time Data</h3>
-                        <p>Live data streaming and visualization with immediate feedback during experiment execution.</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">☁️</div>
-                        <h3>Cloud Synchronization</h3>
-                        <p>Automatic data backup and synchronization across all devices using iCloud integration.</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">📊</div>
-                        <h3>Advanced Analytics</h3>
-                        <p>Sophisticated data analysis tools with comparison views and advanced smoothing algorithms.</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">🔬</div>
-                        <h3>Scientific Precision</h3>
-                        <p>Professional-grade tools designed specifically for electrochemical research and analysis.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
 
         <!-- App Store Information -->
         <section class="app-store-section">
@@ -375,7 +356,7 @@
                     <div class="app-store-info">
                         <h3>Download NanoPStat</h3>
                         <p>
-                            NanoPStat is available as a free download on the App Store. The app is designed for 
+                            NanoPStat is available as a free download on the App Store. The app is designed for
                             professional use with Analytical Instrument Systems electrochemical devices.
                         </p>
                         <div class="app-details">
@@ -396,8 +377,10 @@
                             </div>
                         </div>
                         <div class="download-button">
-                            <a href="https://apps.apple.com/us/app/nanopstat/id6504046021" target="_blank" class="app-store-btn">
-                                <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="Download on the App Store">
+                            <a href="https://apps.apple.com/us/app/nanopstat/id6504046021" target="_blank"
+                                class="app-store-btn">
+                                <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg"
+                                    alt="Download on the App Store">
                             </a>
                         </div>
                     </div>
@@ -410,7 +393,8 @@
             <div class="container">
                 <h2>Project Resources</h2>
                 <div class="resource-links">
-                    <a href="https://apps.apple.com/us/app/nanopstat/id6504046021" class="resource-link" target="_blank">
+                    <a href="https://apps.apple.com/us/app/nanopstat/id6504046021" class="resource-link"
+                        target="_blank">
                         <h3>View on App Store</h3>
                         <p>Download the app and see user reviews</p>
                     </a>
@@ -445,7 +429,32 @@
                     });
                 }
             }, 500);
+
+            // Initialize tab functionality
+            initializeTabs();
         });
+
+        function initializeTabs() {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabPanels = document.querySelectorAll('.tab-panel');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const targetTab = button.getAttribute('data-tab');
+
+                    // Remove active class from all buttons and panels
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabPanels.forEach(panel => panel.classList.remove('active'));
+
+                    // Add active class to clicked button and corresponding panel
+                    button.classList.add('active');
+                    const targetPanel = document.getElementById(targetTab);
+                    if (targetPanel) {
+                        targetPanel.classList.add('active');
+                    }
+                });
+            });
+        }
     </script>
 </body>
 
