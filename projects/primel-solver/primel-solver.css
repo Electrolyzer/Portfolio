@@ -213,10 +213,7 @@
 /* Results Section */
 
 .suggestions-results {
-    flex: 1;
-    overflow-y: auto;
-    padding-right: 0.5rem;
-    margin-right: -0.5rem;
+    min-height: 200px;
 }
 
 .no-results {
@@ -266,7 +263,6 @@
     margin-top: 2rem;
     padding-top: 2rem;
     border-top: 1px solid #e5e7eb;
-    flex-shrink: 0;
 }
 
 .stats-section h4 {
@@ -510,14 +506,10 @@
     padding: 2rem;
     border-radius: 12px;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    height: 690px;
-    display: flex;
-    flex-direction: column;
 }
 
 .game-header {
     margin-bottom: 2rem;
-    flex-shrink: 0;
 }
 
 .game-header h3 {
@@ -635,7 +627,6 @@
     background: #f9fafb;
     border-radius: 8px;
     border-left: 4px solid #2563eb;
-    flex-shrink: 0;
 }
 
 .game-status p {
@@ -660,16 +651,12 @@
     padding: 2rem;
     border-radius: 12px;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    height: 690px;
-    display: flex;
-    flex-direction: column;
 }
 
 .analysis-section h3 {
     font-size: 1.5rem;
     margin-bottom: 1.5rem;
     color: #1f2937;
-    flex-shrink: 0;
 }
 
 /* Animation Classes */
@@ -730,11 +717,6 @@
     .demo-mode.active {
         grid-template-columns: 1fr;
         gap: 2rem;
-    }
-
-    .game-section,
-    .analysis-section {
-        height: 500px;
     }
 
     .game-controls {
