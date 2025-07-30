@@ -223,15 +223,50 @@ section h2 {
     align-items: center;
     justify-content: center;
     color: white;
+    position: relative;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.project-image::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 1;
 }
 
 .project-placeholder {
     text-align: center;
+    position: relative;
+    z-index: 2;
 }
 
 .project-placeholder h3 {
     font-size: 1.8rem;
     margin-bottom: 0.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.project-placeholder p {
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Specific project backgrounds */
+.project-card:nth-child(1) .project-image {
+    background-image: url('assets/Primel_board.png');
+}
+
+.project-card:nth-child(2) .project-image {
+    background-image: url('assets/Half_solved_maze.png');
+}
+
+.project-card:nth-child(3) .project-image {
+    background-image: url('assets/saved_result_viewing.jpg');
 }
 
 .project-content {
