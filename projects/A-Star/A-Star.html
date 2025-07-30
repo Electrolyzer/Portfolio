@@ -66,13 +66,14 @@
                     </a>
                 </div>
                 <p class="demo-description">
-                    This project implements three highly parameterizable variants of the A* search algorithm for
-                    pathfinding with limited knowledge.
-                    Each algorithm can be configured with different tiebreaker strategies (g-value vs h-value
-                    preference), sight radius settings (1-20 cells),
-                    and algorithm types (Forward, Backward, or Adaptive). The application provides comprehensive tools
-                    for comparing how these
-                    parameter choices affect performance across different maze configurations.
+                    Repeated A* is a pathfinding approach for environments with limited visibility. The algorithm plans a path with
+                    current knowledge, follows it until discovering new obstacles, then replans from the current position. This
+                    process repeats until reaching the goal, making it ideal for robot navigation and other real-world scenarios.
+                </p>
+                <p class="demo-description">
+                    This project implements three variants with configurable tiebreaker strategies, sight radius settings (1-20 cells),
+                    and algorithm types (Forward, Backward, or Adaptive). The application provides comprehensive tools for comparing
+                    how these parameter choices affect performance across different maze configurations.
                 </p>
 
                 <div class="demo-container">
@@ -133,6 +134,16 @@
                             <div class="screenshot-image">
                                 <div class="performance-carousel">
                                     <div class="carousel-container">
+                                        <button class="carousel-arrow carousel-arrow-prev" aria-label="Previous slide">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <polyline points="15,18 9,12 15,6"></polyline>
+                                            </svg>
+                                        </button>
+                                        <button class="carousel-arrow carousel-arrow-next" aria-label="Next slide">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <polyline points="9,6 15,12 9,18"></polyline>
+                                            </svg>
+                                        </button>
                                         <div class="carousel-slides">
                                             <div class="carousel-slide active">
                                                 <img src="assets/data-comparison.png" alt="Algorithm Comparison Analysis">
@@ -472,6 +483,8 @@
             const slides = document.querySelectorAll('.carousel-slide');
             const dots = document.querySelectorAll('.dot');
             const carousel = document.querySelector('.performance-carousel');
+            const prevArrow = document.querySelector('.carousel-arrow-prev');
+            const nextArrow = document.querySelector('.carousel-arrow-next');
             let currentSlide = 0;
             let autoAdvanceTimer;
             let isPaused = false;
@@ -503,6 +516,11 @@
                 showSlide(next);
             }
 
+            function prevSlide() {
+                const prev = (currentSlide - 1 + slides.length) % slides.length;
+                showSlide(prev);
+            }
+
             function startAutoAdvance() {
                 if (!isPaused) {
                     autoAdvanceTimer = setInterval(nextSlide, 4000); // 4 seconds per slide
@@ -521,6 +539,23 @@
                     startAutoAdvance(); // Restart timer
                 });
             });
+
+            // Add click handlers to arrows
+            if (prevArrow) {
+                prevArrow.addEventListener('click', () => {
+                    prevSlide();
+                    stopAutoAdvance();
+                    startAutoAdvance(); // Restart timer
+                });
+            }
+
+            if (nextArrow) {
+                nextArrow.addEventListener('click', () => {
+                    nextSlide();
+                    stopAutoAdvance();
+                    startAutoAdvance(); // Restart timer
+                });
+            }
 
             // Pause on hover
             carousel.addEventListener('mouseenter', () => {
